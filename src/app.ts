@@ -26,7 +26,6 @@ class App {
 
   public listen() {
     this.app.listen(this.port, () => {
-      // eslint-disable-next-line no-console
       console.log(`App listening on the port ${this.port}`);
     });
   }
