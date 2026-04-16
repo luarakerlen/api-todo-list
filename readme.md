@@ -18,7 +18,7 @@ Antes de começar, certifique-se de ter instalado:
 - [Docker](https://www.docker.com/) e [Docker Compose](https://docs.docker.com/compose/)
 - [Git](https://git-scm.com/)
 
-## Como Usar Este Template
+## ⚙️ Como Usar Este Template
 
 Este repositório é um template no GitHub. Para usá-lo:
 
@@ -98,7 +98,9 @@ Este repositório é um template no GitHub. Para usá-lo:
 ```
 ├── src/
 │   ├── controllers/     # Controladores da API
-│   ├── database/        # Configurações do banco de dados
+│   ├── database/        # Configurações do banco de 
+dados
+│   ├── docs/            # Utilitários (imagens)
 │   ├── dtos/            # Data Transfer Objects
 │   ├── envs/            # Configurações de ambiente
 │   ├── middlewares/     # Middlewares personalizados
@@ -134,9 +136,68 @@ Este repositório é um template no GitHub. Para usá-lo:
 - **Docker**: Containerização.
 - **ts-node-dev**: Ferramenta para desenvolvimento com TypeScript e autoreload.
 
+## 📊 Funcionalidades
+
+* **Cadastro de usuários**
+* **Autenticação de usuários (JWT)**
+* **Criação de tarefas**
+* **Listagem de tarefas do usuário autenticado**
+* **Busca de tarefa por ID**
+* **Atualização de tarefas**
+* **Remoção de tarefas**
+
+## 📌 End Points Disponíveis
+
+![End Points da Api](./src/docs/api-end-points.png)
+
+## Diagrama UML
+![Diagrama UML](./src/docs/uml.png)
+
+## Requisitos
+### Funcionais
+| ID  | Requisito |
+|-----|----------|
+| RF01 | Cadastro de usuários |
+| RF02 | Login de usuários |
+| RF03 | Criar tarefa |
+| RF04 | Listar tarefas do usuário autenticado |
+| RF05 | Buscar uma tarefa específica |
+| RF06 | Atualizar tarefa |
+| RF07 | Remover tarefa |
+| RF08 | Garantir que cada usuário acesse apenas suas próprias tarefas |
+| RF09 | Associar cada tarefa a um usuário |
+| RF10 | Definir status da tarefa (pendente, em_andamento, concluida) |
+
+### Não Funcionais
+| ID  | Requisito |
+|-----|----------|
+| RNF01 | Uso de autenticação com JWT |
+| RNF02 | Proteção das rotas de tarefas |
+| RNF03 | Armazenamento seguro de senhas (hash/criptografia) |
+| RNF04 | Proibição de armazenamento de senha em texto puro |
+| RNF05 | Email do usuário deve ser único |
+| RNF06 | Validação de campos obrigatórios |
+| RNF07 | Organização do projeto em camadas |
+| RNF08 | Implementação de pelo menos um Design Pattern |
+| RNF09 | Separação de responsabilidades |
+| RNF10 | Tratamento de erros |
+| RNF11 | Padronização de respostas da API |
+| RNF12 | Uso correto de códigos HTTP |
+| RNF13 | Validação de dados de entrada |
+| RNF14 | Documentação clara da API |
+| RNF15 | Inclusão de instruções de execução e variáveis de ambiente |
+
+## 📄 Documentação da API (Swagger)
+
+Acesse a documentação interativa da API:
+
+👉 *****************************************************
 ## Contribuição
 
 Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull requests.
+
+##  
+
 
 ## Licença
 
