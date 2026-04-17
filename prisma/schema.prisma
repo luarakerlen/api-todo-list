@@ -28,10 +28,10 @@ enum TaskStatus {
 }
 
 model User {
-    id        String   @id @default(uuid())
-    name      String
-    email     String   @unique
-    password  String
+    id        String   @id @default(uuid()) @db.VarChar(50)
+    name      String   @db.VarChar(200)
+    email     String   @unique @db.VarChar(200)
+    password  String   @db.VarChar(100)
     tasks     Task[]
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now()) @updatedAt
@@ -40,14 +40,14 @@ model User {
 }
 
 model Task {
-    id          String     @id @default(uuid())
-    title       String
-    description String?
+    id          String     @id @default(uuid()) @db.VarChar(50)
+    title       String     @db.VarChar(200)
+    description String?    @db.Text
     status      TaskStatus @default(pending)
     createdAt   DateTime   @default(now())
     updatedAt   DateTime   @default(now()) @updatedAt
 
-    userId String
+    userId String @db.VarChar(50)
     user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@map("tasks")
