@@ -1,3 +1,5 @@
+import { UserDto } from '../dtos/user.dto';
+
 export class User {
   constructor(
     private id: string,
@@ -7,7 +9,7 @@ export class User {
     private updatedAt: Date,
   ) {}
 
-  public toJSON() {
+  public toJSON(): UserDto {
     return {
       id: this.id,
       name: this.name,
