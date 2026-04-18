@@ -1,15 +1,13 @@
 import prismaRepository from "../database/prisma.repository";
-import { TaskStatus, Task as TaskEntity } from "@prisma/client";
+import { Task as TaskEntity } from "@prisma/client";
 import { Task } from "../models";
+import { ListTasksDto } from "../dtos";
 
 export class TaskService {
 
   constructor() { }
 
-  public async listTasks(filters?: {
-    title?: string;
-    status?: TaskStatus;
-  }): Promise<Task[]> {
+  public async listTasks({ userId, filters }: ListTasksDto): Promise<Task[]> {
     const where: any = {};
 
     if (filters?.title) {
@@ -23,7 +21,12 @@ export class TaskService {
       where.status = filters.status;
     }
 
-    const tasks = await prismaRepository.task.findMany({ where })
+    const tasks = await prismaRepository.task.findMany({
+      where: {
+        userId,
+        ...where,
+      }
+    })
 
     return tasks.map((task) => this.mapToModel(task));
   }
