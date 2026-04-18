@@ -2,13 +2,15 @@ import prismaRepository from "../database/prisma.repository";
 import { Task as TaskEntity } from "@prisma/client";
 import { Task } from "../models";
 import { ListTasksDto } from "../dtos";
+import { PaginatedResponse } from "../shared/types";
 
 export class TaskService {
 
   constructor() { }
 
-  public async listTasks({ userId, filters }: ListTasksDto): Promise<Task[]> {
-    const where: any = {};
+  public async listTasks({ userId, filters, pagination }: ListTasksDto): Promise<PaginatedResponse<Task>> {
+    /* Filters */
+    const where: any = { userId };
 
     if (filters?.title) {
       where.title = {
@@ -21,14 +23,33 @@ export class TaskService {
       where.status = filters.status;
     }
 
+    /* Pagination */
+    const page = pagination?.page ?? 1;
+    const pageSize = pagination?.pageSize ?? 10;
+
+    const totalTasks = await prismaRepository.task.count({ where });
+
+    /* Fetching data */
     const tasks = await prismaRepository.task.findMany({
-      where: {
-        userId,
-        ...where,
+      where,
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      orderBy: {
+        createdAt: "desc",
       }
     })
 
-    return tasks.map((task) => this.mapToModel(task));
+    const data = tasks.map((task) => this.mapToModel(task));
+
+    return {
+      data,
+      meta: {
+        page,
+        pageSize,
+        total: totalTasks,
+        totalPages: Math.ceil(totalTasks / pageSize),
+      }
+    }
   }
 
   private mapToModel(entity: TaskEntity): Task {

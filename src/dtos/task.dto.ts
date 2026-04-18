@@ -6,4 +6,8 @@ export interface ListTasksDto {
     title?: string;
     status?: TaskStatus;
   };
+  pagination?: {
+    page: number;
+    pageSize: number;
+  };
 }
