@@ -86,6 +86,25 @@ export class TaskService {
     return this.mapToModel(task);
   }
 
+  /**
+   * Deleta uma task pelo ID, garantindo que ela pertença ao usuário especificado.
+   * 
+   * @param taskId ID da task a ser deletada.
+   * @param userId ID do usuário proprietário da task.
+   * 
+   * @throws HTTPError se a task não for encontrada ou não pertencer ao usuário.
+   * @returns A task deletada, mapeada para o modelo Task.
+   */
+  public async deleteTask(taskId: string, userId: string): Promise<Task> {
+    const taskToBeDeleted = await this.getTaskById(taskId, userId);
+
+    const taskDeleted = await prismaRepository.task.delete({
+      where: { id: taskToBeDeleted.toJSON().id },
+    });
+
+    return this.mapToModel(taskDeleted);
+  }
+
   private mapToModel(entity: TaskEntity): Task {
     return new Task(
       entity.id,
