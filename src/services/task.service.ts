@@ -3,6 +3,7 @@ import { Task as TaskEntity } from "@prisma/client";
 import { Task } from "../models";
 import { ListTasksDto } from "../dtos";
 import { PaginatedResponse } from "../shared/types";
+import { HTTPError } from "../utils";
 
 export class TaskService {
 
@@ -13,10 +14,10 @@ export class TaskService {
    * 
    * @param params Objeto contendo userId, filtros opcionais e  opções de paginação.
    * @param params.userId Retorna apenas as tasks pertencentes a esse usuário.
-   * @param params.title Filtra pelo título (busca parcial, case insensitive).
-   * @param params.status Filtra pelo status da task.
-   * @param params.page Número da página (padrão: 1).
-   * @param params.pageSize Quantidade de itens por página (padrão: 10).
+   * @param params.filters.title Filtra pelo título (busca parcial, case insensitive).
+   * @param params.filters.status Filtra pelo status da task.
+   * @param params.pagination.page Número da página (padrão: 1).
+   * @param params.pagination.pageSize Quantidade de itens por página (padrão: 10).
    * 
    * @returns Uma resposta paginada contendo as tasks do usuário especificado.
    */
