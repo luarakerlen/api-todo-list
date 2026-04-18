@@ -8,6 +8,18 @@ export class TaskService {
 
   constructor() { }
 
+  /**
+   * Lista as tasks com filtros opcionais e paginação.
+   * 
+   * @param params Objeto contendo userId, filtros opcionais e  opções de paginação.
+   * @param params.userId Retorna apenas as tasks pertencentes a esse usuário.
+   * @param params.title Filtra pelo título (busca parcial, case insensitive).
+   * @param params.status Filtra pelo status da task.
+   * @param params.page Número da página (padrão: 1).
+   * @param params.pageSize Quantidade de itens por página (padrão: 10).
+   * 
+   * @returns Uma resposta paginada contendo as tasks do usuário especificado.
+   */
   public async listTasks({ userId, filters, pagination }: ListTasksDto): Promise<PaginatedResponse<Task>> {
     /* Filters */
     const where: any = { userId };
