@@ -48,7 +48,7 @@ export class TaskRoutes {
                 body("status")
                     .optional()
                     .isIn(["pending", "in_progress", "completed"])
-                    .withMessage("Status must be 'pending', 'in_progress' or 'completed'"),
+                    .withMessage("Status deve ser 'pending', 'in_progress' ou 'completed'"),
             ]),
             controller.createTask,
         );
@@ -71,7 +71,7 @@ export class TaskRoutes {
                 body("status")
                     .optional()
                     .isIn(["pending", "in_progress", "completed"])
-                    .withMessage("Status must be 'pending', 'in_progress' or 'completed'"),
+                    .withMessage("Status deve ser 'pending', 'in_progress' ou 'completed'"),
             ]),
             controller.updateTask,
         );
