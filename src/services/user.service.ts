@@ -18,11 +18,11 @@ export class UserService {
 
   constructor(private userRepository: UserRepository) { }
   /**
- * Cria um novo usuário no sistema.
- * 
- * @param dto - Dados necessários para criação do usuário
- * @returns Usuário criado no formato de domínio (User)
- */
+   * Cria um novo usuário no sistema.
+   * 
+   * @param dto - Dados necessários para criação do usuário
+   * @returns Usuário criado no formato de domínio (User)
+   */
   public async createUser(dto: CreateUserDto): Promise<User> {
     const hashedPassword = await bcrypt.hash(dto.password, 10);
 

@@ -9,14 +9,14 @@ export class UsersRoutes {
         const router = express.Router();
         const userController = new UserController(new UserService(new UserRepository()));
         /**
-* @route GET /health/users
-* @description Endpoint de verificação de saúde da API
-* 
-* Utilizado para validar se a aplicação está online e respondendo corretamente.
-* Pode ser usado por serviços de monitoramento, deploy ou testes de infraestrutura.
-* 
-* @returns {200} { status: string } - Retorna status "ok" se a API estiver funcionando
-*/
+        * @route GET /health/users
+        * @description Endpoint de verificação de saúde da API
+        * 
+        * Utilizado para validar se a aplicação está online e respondendo corretamente.
+        * Pode ser usado por serviços de monitoramento, deploy ou testes de infraestrutura.
+        * 
+        * @returns {200} { status: string } - Retorna status "ok" se a API estiver funcionando
+        */
         router.get("/health/users", (_: Request, res: Response) => {
             res.status(200).json({ status: "ok" });
         });
