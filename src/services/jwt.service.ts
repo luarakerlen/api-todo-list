@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-import { JwtPayload, sign } from 'jsonwebtoken';
+import { sign } from 'jsonwebtoken';
 
 interface JwtUserPayload {
     id: string,

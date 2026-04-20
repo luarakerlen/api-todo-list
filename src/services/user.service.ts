@@ -7,6 +7,8 @@ import { LoginDto } from '../dtos';
 import { CreateUserDto } from '../dtos/user.dto';
 import { User } from '../models';
 import { JwtService } from './jwt.service';
+import { Result } from '../types/result.type';
+import { LoginResponse } from '../types/auth.types';
 
 /**
  * Service responsável pelas regras de negócio relacionadas a Usuário.
@@ -56,8 +58,7 @@ export class UserService {
  * - message: mensagem descritiva
  * - data: token JWT (em caso de sucesso)
  */
-  public async login(data: LoginDto): Promise<any> {
-    data.password = await hashSync(data.password, 8);
+  public async login(data: LoginDto): Promise<Result<LoginResponse>> {
     const currentUser = await this.userRepository.findUserByEmail(data);
 
     if (!currentUser) {
@@ -83,7 +84,9 @@ export class UserService {
     return {
       code: 200,
       message: "User successfully logged",
-      data: token
+      data: {
+        token
+      }
     }
   }
   /**
