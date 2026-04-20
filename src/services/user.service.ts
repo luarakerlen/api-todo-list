@@ -1,13 +1,12 @@
 import { User as UserEntity } from '@prisma/client';
 
-import { ExternalService } from '.';
 import prismaRepository from '../database/prisma.repository';
 import { CreateUserDto } from '../dtos/user.dto';
 import { User } from '../models';
 import * as bcrypt from 'bcrypt';
 
 export class UserService {
-  constructor(private externalService?: ExternalService) {}
+  constructor() { }
 
   public async createUser(dto: CreateUserDto): Promise<User> {
     const hashedPassword = await bcrypt.hash(dto.password, 10);
