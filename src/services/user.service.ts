@@ -2,7 +2,7 @@ import { User as UserEntity } from '@prisma/client';
 
 import * as bcrypt from 'bcrypt';
 import { hashSync } from 'bcrypt';
-import { UserRepository } from '../database/user.repository';
+import { UserRepository } from '../database';
 import { LoginDto } from '../dtos';
 import { CreateUserDto } from '../dtos/user.dto';
 import { User } from '../models';
@@ -26,11 +26,11 @@ export class UserService {
     private jwtService: JwtService
   ) { }
   /**
- * Cria um novo usuário no sistema.
- * 
- * @param dto - Dados necessários para criação do usuário
- * @returns Usuário criado no formato de domínio (User)
- */
+   * Cria um novo usuário no sistema.
+   * 
+   * @param dto - Dados necessários para criação do usuário
+   * @returns Usuário criado no formato de domínio (User)
+   */
   public async createUser(data: CreateUserDto): Promise<User> {
     const hashedPassword = await hashSync(data.password, 8);
 

@@ -10,11 +10,11 @@ import { CreateUserDto, LoginDto } from "../dtos";
 export class UserRepository {
     private prisma = new PrismaClient();
     /**
- * Cria um novo usuário no banco de dados.
- * 
- * @param data - Dados necessários para criação do usuário (nome, email, senha)
- * @returns Usuário criado retornado pelo Prisma
- */
+     * Cria um novo usuário no banco de dados.
+     * 
+     * @param data - Dados necessários para criação do usuário (nome, email, senha)
+     * @returns Usuário criado retornado pelo Prisma
+     */
     async createUser(data: CreateUserDto) {
         return this.prisma.user.create({
             data

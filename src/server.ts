@@ -2,9 +2,10 @@ import { log } from "console";
 import App from "./app";
 import { envs } from "./envs";
 import {
-  ExampleRoutes
+  ExampleRoutes,
+  UsersRoutes,
+  TaskRoutes
 } from "./routes";
-import { UsersRoutes } from "./routes/users.routes";
 
 
 if (envs.PORT === undefined || envs.PORT == null) {
@@ -14,9 +15,8 @@ if (envs.PORT === undefined || envs.PORT == null) {
 const app = new App(
   [
     ExampleRoutes.bind(),
-    UsersRoutes.bind()
-    // Add more routes here
-
+    UsersRoutes.bind(),
+    TaskRoutes.bind(),
   ],
   envs.PORT,
 );
