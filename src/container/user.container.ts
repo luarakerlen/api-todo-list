@@ -12,4 +12,3 @@ const userService = new UserService(userRepository, jwtService);
 const userController = new UserController(userService);
 
 export { userController };
-
