@@ -4,6 +4,14 @@ export interface CreateUserDto {
   password: string;
 }
 
+export interface UserDto {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface UpdateUserDto {
   userId: string;
   name?: string;
