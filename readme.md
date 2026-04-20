@@ -5,6 +5,7 @@ Este é um template para criar APIs RESTful em Node.js utilizando Express, TypeS
 ## Descrição
 
 O template inclui uma estrutura básica para uma API Node.js com:
+
 - **Express**: Framework web para Node.js.
 - **TypeScript**: Superset do JavaScript com tipagem estática.
 - **Prisma**: ORM para interação com o banco de dados PostgreSQL.
@@ -14,6 +15,7 @@ O template inclui uma estrutura básica para uma API Node.js com:
 ## Pré-requisitos
 
 Antes de começar, certifique-se de ter instalado:
+
 - [Node.js](https://nodejs.org/) (versão 18 ou superior)
 - [Docker](https://www.docker.com/) e [Docker Compose](https://docs.docker.com/compose/)
 - [Git](https://git-scm.com/)
@@ -25,6 +27,7 @@ Este repositório é um template no GitHub. Para usá-lo:
 1. Clique no botão **"Use this template"** no topo da página do repositório no GitHub.
 2. Escolha um nome para o seu novo repositório e clique em **"Create repository from template"**.
 3. Clone o repositório criado para sua máquina local:
+
    ```bash
    git clone https://github.com/SEU_USUARIO/SEU_REPOSITORIO.git
    cd SEU_REPOSITORIO
@@ -35,6 +38,7 @@ Este repositório é um template no GitHub. Para usá-lo:
 ## Configuração
 
 1. Crie um arquivo `.env` na raiz do projeto com base no arquivo `.env-example`:
+
    ```env
    PORT=3030
    POSTGRES_USER=seu_usuario
@@ -52,6 +56,7 @@ Este repositório é um template no GitHub. Para usá-lo:
 1. Certifique-se de que o Docker e Docker Compose estão instalados e rodando.
 
 2. Execute o comando para construir e iniciar os containers:
+
    ```bash
    docker compose up --build
    ```
@@ -70,6 +75,7 @@ Este repositório é um template no GitHub. Para usá-lo:
 ### Sem Docker (Desenvolvimento Local)
 
 1. Instale as dependências:
+
    ```bash
    npm install
    ```
@@ -77,16 +83,19 @@ Este repositório é um template no GitHub. Para usá-lo:
 2. Configure o banco de dados PostgreSQL localmente ou use um serviço como ElephantSQL.
 
 3. Execute as migrações do Prisma:
+
    ```bash
    npx prisma migrate dev
    ```
 
 4. Gere o cliente Prisma:
+
    ```bash
    npx prisma generate
    ```
 
 5. Inicie o servidor em modo de desenvolvimento:
+
    ```bash
    npm run dev
    ```
@@ -98,7 +107,7 @@ Este repositório é um template no GitHub. Para usá-lo:
 ```
 ├── src/
 │   ├── controllers/     # Controladores da API
-│   ├── database/        # Configurações do banco de 
+│   ├── database/        # Configurações do banco de
 dados
 │   ├── docs/            # Utilitários (imagens)
 │   ├── dtos/            # Data Transfer Objects
@@ -135,69 +144,83 @@ dados
 - **PostgreSQL**: Banco de dados relacional.
 - **Docker**: Containerização.
 - **ts-node-dev**: Ferramenta para desenvolvimento com TypeScript e autoreload.
+- **Swagger**: Ferramenta para documentação da API.
+
+## 🎯 Decisões de projeto
+
+- Documentação de rotas, controllers e services com TSDocs.
+- Documentação da API com Swagger.
+- Utilização de Docker.
+- Mensagens de erro em português.
 
 ## 📊 Funcionalidades
 
-* **Cadastro de usuários**
-* **Autenticação de usuários (JWT)**
-* **Criação de tarefas**
-* **Listagem de tarefas do usuário autenticado**
-* **Busca de tarefa por ID**
-* **Atualização de tarefas**
-* **Remoção de tarefas**
+- **Cadastro de usuários**
+- **Autenticação de usuários (JWT)**
+- **Criação de tarefas**
+- **Listagem de tarefas do usuário autenticado**
+- **Busca de tarefa por ID**
+- **Atualização de tarefas**
+- **Remoção de tarefas**
 
 ## 📌 End Points Disponíveis
 
 ![End Points da Api](./src/docs/api-end-points.png)
 
 ## Diagrama UML
+
 ![Diagrama UML](./src/docs/uml.png)
 
 ## Requisitos
+
 ### Funcionais
-| ID  | Requisito |
-|-----|----------|
-| RF01 | Cadastro de usuários |
-| RF02 | Login de usuários |
-| RF03 | Criar tarefa |
-| RF04 | Listar tarefas do usuário autenticado |
-| RF05 | Buscar uma tarefa específica |
-| RF06 | Atualizar tarefa |
-| RF07 | Remover tarefa |
+
+| ID   | Requisito                                                     |
+| ---- | ------------------------------------------------------------- |
+| RF01 | Cadastro de usuários                                          |
+| RF02 | Login de usuários                                             |
+| RF03 | Criar tarefa                                                  |
+| RF04 | Listar tarefas do usuário autenticado                         |
+| RF05 | Buscar uma tarefa específica                                  |
+| RF06 | Atualizar tarefa                                              |
+| RF07 | Remover tarefa                                                |
 | RF08 | Garantir que cada usuário acesse apenas suas próprias tarefas |
-| RF09 | Associar cada tarefa a um usuário |
-| RF10 | Definir status da tarefa (pendente, em_andamento, concluida) |
+| RF09 | Associar cada tarefa a um usuário                             |
+| RF10 | Definir status da tarefa (pendente, em_andamento, concluida)  |
 
 ### Não Funcionais
-| ID  | Requisito |
-|-----|----------|
-| RNF01 | Uso de autenticação com JWT |
-| RNF02 | Proteção das rotas de tarefas |
-| RNF03 | Armazenamento seguro de senhas (hash/criptografia) |
-| RNF04 | Proibição de armazenamento de senha em texto puro |
-| RNF05 | Email do usuário deve ser único |
-| RNF06 | Validação de campos obrigatórios |
-| RNF07 | Organização do projeto em camadas |
-| RNF08 | Implementação de pelo menos um Design Pattern |
-| RNF09 | Separação de responsabilidades |
-| RNF10 | Tratamento de erros |
-| RNF11 | Padronização de respostas da API |
-| RNF12 | Uso correto de códigos HTTP |
-| RNF13 | Validação de dados de entrada |
-| RNF14 | Documentação clara da API |
+
+| ID    | Requisito                                                  |
+| ----- | ---------------------------------------------------------- |
+| RNF01 | Uso de autenticação com JWT                                |
+| RNF02 | Proteção das rotas de tarefas                              |
+| RNF03 | Armazenamento seguro de senhas (hash/criptografia)         |
+| RNF04 | Proibição de armazenamento de senha em texto puro          |
+| RNF05 | Email do usuário deve ser único                            |
+| RNF06 | Validação de campos obrigatórios                           |
+| RNF07 | Organização do projeto em camadas                          |
+| RNF08 | Implementação de pelo menos um Design Pattern              |
+| RNF09 | Separação de responsabilidades                             |
+| RNF10 | Tratamento de erros                                        |
+| RNF11 | Padronização de respostas da API                           |
+| RNF12 | Uso correto de códigos HTTP                                |
+| RNF13 | Validação de dados de entrada                              |
+| RNF14 | Documentação clara da API                                  |
 | RNF15 | Inclusão de instruções de execução e variáveis de ambiente |
 
 ## 📄 Documentação da API (Swagger)
 
-Acesse a documentação interativa da API:
+Após rodar os comandos de inicialização da API, acesse a documentação interativa da API:
 
-👉 *****************************************************
+```
+http://localhost:3030/docs
+```
+
 ## Contribuição
 
 Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull requests.
 
-##  
-
+##
 
 ## Licença
 
