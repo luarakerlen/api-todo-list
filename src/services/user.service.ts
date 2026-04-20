@@ -3,18 +3,18 @@ import { User as UserEntity } from '@prisma/client';
 import prismaRepository from '../database/prisma.repository';
 import { CreateUserDto } from '../dtos/user.dto';
 import { User } from '../models';
-import * as bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
 
 export class UserService {
   constructor() { }
 
-  public async createUser(dto: CreateUserDto): Promise<User> {
-    const hashedPassword = await bcrypt.hash(dto.password, 10);
+  public async createUser(user: CreateUserDto): Promise<User> {
+    const hashedPassword = await bcrypt.hash(user.password, 10);
 
     const newUser = await prismaRepository.user.create({
       data: {
-        name: dto.name,
-        email: dto.email,
+        name: user.name,
+        email: user.email,
         password: hashedPassword,
       },
     });

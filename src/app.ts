@@ -1,5 +1,7 @@
 import cors from "cors";
 import express from "express";
+import swaggerUi from "swagger-ui-express";
+import swaggerJson from "./swagger.json";
 
 class App {
   public app: express.Application;
@@ -10,12 +12,18 @@ class App {
     this.port = port;
 
     this.initializeMiddlewares();
+    this.initializeSwagger();
     this.initializeControllers(routers);
   }
 
   private initializeMiddlewares() {
     this.app.use(express.json());
     this.app.use(cors());
+  }
+
+  private initializeSwagger() {
+    this.app.use("/docs", swaggerUi.serve);
+    this.app.get("/docs", swaggerUi.setup(swaggerJson));
   }
 
   private initializeControllers(routers: express.Router[]) {
