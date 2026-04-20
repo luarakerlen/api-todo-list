@@ -8,7 +8,7 @@ import { LoginDto, LoginResponseDto } from '../dtos/auth.dto';
 import { User } from '../models/user.model';
 
 export class AuthService {
-  constructor(private externalService?: ExternalService) {}
+  constructor(private externalService?: ExternalService) { }
 
   public async login(dto: LoginDto): Promise<LoginResponseDto> {
     const userDB = await prismaRepository.user.findUnique({
