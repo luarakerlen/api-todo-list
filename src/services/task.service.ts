@@ -1,13 +1,37 @@
 import prismaRepository from "../database/prisma.repository";
 import { Task as TaskEntity } from "@prisma/client";
 import { Task } from "../models";
-import { ListTasksDto } from "../dtos";
+import { CreateTaskDto, UpdateTaskDto, ListTasksDto } from "../dtos";
 import { PaginatedResponse } from "../shared/types";
 import { HTTPError } from "../utils";
 
 export class TaskService {
 
   constructor() { }
+
+  /**
+   * Cria uma nova task para o usuário especificado.
+   * 
+   * @param param Objeto contendo os dados da task a ser criada.
+   * @param param.userId ID do usuário proprietário da task.
+   * @param param.title Título da task.
+   * @param param.description Descrição da task (opcional).
+   * @param param.status Status da task (opcional, padrão: pending).
+   * 
+   * @returns A task criada, mapeada para o modelo Task.
+   */
+  public async createTask({ userId, title, description, status }: CreateTaskDto): Promise<Task> {
+    const newTask = await prismaRepository.task.create({
+      data: {
+        userId,
+        title,
+        ...(description !== undefined && { description }),
+        ...(status !== undefined && { status }),
+      }
+    });
+
+    return this.mapToModel(newTask);
+  }
 
   /**
    * Lista as tasks com filtros opcionais e paginação.
@@ -80,10 +104,46 @@ export class TaskService {
     });
 
     if (!task || task.userId !== userId) {
-      throw new HTTPError(404, "Task not found");
+      throw new HTTPError(404, "Tarefa não encontrada.");
     }
 
     return this.mapToModel(task);
+  }
+
+  /**
+   * Atualiza uma task existente, garantindo que ela pertença ao usuário especificado.
+   * 
+   * @param param Objeto contendo os dados para atualização da task.
+   * @param param.taskId ID da task a ser atualizada.
+   * @param param.userId ID do usuário proprietário da task.
+   * @param param.title Novo título da task (opcional).
+   * @param param.description Nova descrição da task (opcional).
+   * @param param.status Novo status da task (opcional).
+   * 
+   * @throws HTTPError se a task não for encontrada, não pertencer ao usuário ou se nenhum campo para atualização for fornecido.
+   * @returns A task atualizada, mapeada para o modelo Task.
+   */
+  public async updateTask({ taskId, userId, title, description, status }: UpdateTaskDto): Promise<Task> {
+    const taskToBeUpdated = await this.getTaskById(taskId, userId);
+
+    if (
+      title === undefined &&
+      description === undefined &&
+      status === undefined
+    ) {
+      throw new HTTPError(400, "Nenhum campo para ser atualizado.");
+    }
+
+    const updatedTask = await prismaRepository.task.update({
+      where: { id: taskToBeUpdated.toJSON().id },
+      data: {
+        ...(title !== undefined && { title }),
+        ...(description !== undefined && { description }),
+        ...(status !== undefined && { status }),
+      }
+    });
+
+    return this.mapToModel(updatedTask);
   }
 
   /**

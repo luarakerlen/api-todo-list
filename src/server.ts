@@ -3,7 +3,8 @@ import App from "./app";
 import { envs } from "./envs";
 import {
   ExampleRoutes,
-  UsersRoutes
+  UsersRoutes,
+  TaskRoutes
 } from "./routes";
 
 
@@ -15,6 +16,7 @@ const app = new App(
   [
     ExampleRoutes.bind(),
     UsersRoutes.bind(),
+    TaskRoutes.bind(),
   ],
   envs.PORT,
 );
