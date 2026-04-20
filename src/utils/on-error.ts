@@ -1,18 +1,21 @@
 import { Response } from "express";
 
 import { HTTPError } from "./http.error";
+import { HTTPResponse } from "./http.response";
 
 export function onError(error: unknown, res: Response): Response {
   if (error instanceof HTTPError) {
-    return res.status(error.statusCode).json({
-      success: false,
+    return HTTPResponse({
+      res,
+      statusCode: error.statusCode,
       message: error.message,
       details: error.details,
     });
   }
 
-  return res.status(500).json({
-    success: false,
+  return HTTPResponse({
+    res,
+    statusCode: 500,
     message: "Internal server error",
     details: [
       {

@@ -1,5 +1,4 @@
 import { User as UserEntity } from '@prisma/client';
-
 import * as bcrypt from 'bcrypt';
 import { hashSync } from 'bcrypt';
 import { UserRepository } from '../database';
@@ -30,12 +29,12 @@ export class UserService {
    * @param dto - Dados necessários para criação do usuário
    * @returns Usuário criado no formato de domínio (User)
    */
-  public async createUser(data: CreateUserDto): Promise<User> {
-    const hashedPassword = await hashSync(data.password, 8);
+  public async createUser(user: CreateUserDto): Promise<User> {
+    const hashedPassword = await bcrypt.hash(user.password, 10);
 
     const newUser = await this.userRepository.createUser({
-      name: data.name,
-      email: data.email,
+      name: user.name,
+      email: user.email,
       password: hashedPassword,
     });
 

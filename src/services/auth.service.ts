@@ -1,5 +1,4 @@
 import { User as UserEntity } from '@prisma/client';
-import { ExternalService } from '.';
 import prismaRepository from '../database/prisma.repository';
 import { HTTPError } from '../utils';
 import bcrypt from 'bcrypt';
@@ -8,18 +7,18 @@ import { LoginDto, LoginResponseDto } from '../dtos';
 import { User } from '../models';
 
 export class AuthService {
-  constructor(private externalService?: ExternalService) { }
+  constructor() { }
 
-  public async login(dto: LoginDto): Promise<LoginResponseDto> {
+  public async login(loginDto: LoginDto): Promise<LoginResponseDto> {
     const userDB = await prismaRepository.user.findUnique({
-      where: { email: dto.email },
+      where: { email: loginDto.email },
     });
 
     if (!userDB) {
       throw new HTTPError(401, 'E-mail ou senha inválidos');
     }
 
-    const isPasswordValid = await bcrypt.compare(dto.password, userDB.password);
+    const isPasswordValid = await bcrypt.compare(loginDto.password, userDB.password);
 
     if (!isPasswordValid) {
       throw new HTTPError(401, 'E-mail ou senha inválidos');
