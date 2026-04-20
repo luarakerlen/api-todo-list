@@ -1,13 +1,10 @@
 import express, { Request, Response } from 'express';
-import { UserService } from '../services';
-import { UserController } from './../controllers/user.controller';
-import { UserRepository } from './../database/user.repository';
+import { userController } from '../container/user.container';
 
 export class UsersRoutes {
 
     public static bind() {
         const router = express.Router();
-        const userController = new UserController(new UserService(new UserRepository()));
         /**
 * @route GET /health/users
 * @description Endpoint de verificação de saúde da API
