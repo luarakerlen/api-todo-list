@@ -1,2 +1,2 @@
-export * from "./example.routes";
+export * from "./health.routes";
 export * from "./task.routes";

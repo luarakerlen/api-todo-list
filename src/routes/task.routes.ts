@@ -20,10 +20,6 @@ export class TaskRoutes {
         const router = express.Router();
         const controller = new TaskController();
 
-        router.get("/health", (_: express.Request, res: express.Response) => {
-            res.status(200).json({ status: "ok" });
-        });
-
         // Protected routes with authentication
         router.get(
             "/tasks",

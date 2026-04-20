@@ -1,13 +1,13 @@
 import App from "./app";
 import { envs } from "./envs";
 import {
-  ExampleRoutes,
+  HealthRoutes,
   TaskRoutes
 } from "./routes";
 
 const app = new App(
   [
-    ExampleRoutes.bind(),
+    HealthRoutes.bind(),
     TaskRoutes.bind(),
   ],
   envs.PORT,
