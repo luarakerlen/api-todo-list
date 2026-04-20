@@ -7,11 +7,10 @@ export interface CreateUserDto {
   password: string;
 }
 
-/**
- * Representa um usuário autenticado no sistema.
- * A senha nunca deve ser exposta aqui.
- */
-export interface LoginDto {
+export interface UserDto {
+  id: string;
+  name: string;
   email: string;
-  password: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
