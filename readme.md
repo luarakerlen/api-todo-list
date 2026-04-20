@@ -171,6 +171,10 @@ dados
 
 ![Diagrama UML](./src/docs/uml.png)
 
+### Diagrama de Caso de Uso
+
+![Caso de Uso](./src/docs/user-case.png)
+
 ## Requisitos
 
 ### Funcionais
@@ -219,8 +223,6 @@ http://localhost:3030/docs
 ## Contribuição
 
 Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull requests.
-
-##
 
 ## Licença
 

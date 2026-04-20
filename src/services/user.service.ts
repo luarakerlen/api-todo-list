@@ -1,27 +1,45 @@
 import { User as UserEntity } from '@prisma/client';
-
-import prismaRepository from '../database/prisma.repository';
+import * as bcrypt from 'bcrypt';
+import { UserRepository } from '../database';
 import { CreateUserDto } from '../dtos/user.dto';
 import { User } from '../models';
-import bcrypt from 'bcrypt';
 
+/**
+ * Service responsável pelas regras de negócio relacionadas a Usuário.
+ * 
+ * Camada intermediária entre Controller e Repository.
+ * Responsável por:
+ * - Criação de usuário
+ * - Hash de senha
+ * - Mapeamento de entidade
+ */
 export class UserService {
-  constructor() { }
 
+  constructor(private userRepository: UserRepository) { }
+  /**
+   * Cria um novo usuário no sistema.
+   * 
+   * @param dto - Dados necessários para criação do usuário
+   * @returns Usuário criado no formato de domínio (User)
+   */
   public async createUser(user: CreateUserDto): Promise<User> {
     const hashedPassword = await bcrypt.hash(user.password, 10);
 
-    const newUser = await prismaRepository.user.create({
-      data: {
-        name: user.name,
-        email: user.email,
-        password: hashedPassword,
-      },
+    const newUser = await this.userRepository.createUser({
+      name: user.name,
+      email: user.email,
+      password: hashedPassword,
     });
 
     return this.mapToModel(newUser);
   }
 
+  /**
+   * Converte a entidade retornada do banco (Prisma) para o modelo de domínio.
+   * 
+   * @param entity - Usuário vindo do Prisma
+   * @returns Instância de User (modelo da aplicação)
+   */
   private mapToModel(entity: UserEntity): User {
     return new User(
       entity.id,
