@@ -11,8 +11,7 @@ export interface CreateUserDto {
  * Representa um usuário autenticado no sistema.
  * A senha nunca deve ser exposta aqui.
  */
-export interface UserDto {
-  id: string;
-  name: string;
+export interface LoginDto {
   email: string;
+  password: string;
 }
