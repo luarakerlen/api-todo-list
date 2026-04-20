@@ -153,6 +153,9 @@ dados
 ## Diagrama UML
 ![Diagrama UML](./src/docs/uml.png)
 
+### Diagrama de Caso de Uso
+![Caso de Uso](./src/docs/user-case.png)
+
 ## Requisitos
 ### Funcionais
 | ID  | Requisito |
@@ -195,9 +198,6 @@ Acesse a documentação interativa da API:
 ## Contribuição
 
 Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull requests.
-
-##  
-
 
 ## Licença
 
