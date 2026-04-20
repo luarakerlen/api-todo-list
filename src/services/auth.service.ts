@@ -5,7 +5,7 @@ import { HTTPError } from '../utils';
 import bcrypt from 'bcrypt';
 import jwt, { SignOptions } from 'jsonwebtoken'; // Importamos o SignOptions para tipagem correta
 import { LoginDto, LoginResponseDto } from '../dtos';
-import { User } from '../models/user.model';
+import { User } from '../models';
 
 export class AuthService {
   constructor(private externalService?: ExternalService) {}
