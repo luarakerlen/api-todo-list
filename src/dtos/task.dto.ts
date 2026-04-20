@@ -22,7 +22,7 @@ export interface ListTasksDto {
     status?: TaskStatus;
   };
   pagination?: {
-    page: number;
-    pageSize: number;
+    page?: number;
+    pageSize?: number;
   };
 }
