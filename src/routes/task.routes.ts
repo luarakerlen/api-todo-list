@@ -20,23 +20,6 @@ export class TaskRoutes {
         const router = express.Router();
         const controller = new TaskController();
 
-        router.get("/health",
-            /*  #swagger.tags = ['Health']
-                #swagger.description = 'Endpoint de saúde para verificar se a API está funcionando corretamente.'
-
-                #swagger.responses[200] = {
-                    description: 'API está saudável',
-                    content: {
-                        "application/json": {
-                            example: { status: "ok" }
-                        }
-                    }
-                }
-            */
-            (_: express.Request, res: express.Response) => {
-                res.status(200).json({ status: "ok" });
-            });
-
         // Protected routes with authentication
         router.get(
             "/tasks",

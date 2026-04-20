@@ -2,7 +2,7 @@
 import { Request, Response } from "express";
 import { TaskStatus } from "@prisma/client";
 import { TaskService } from "../services";
-import { onError } from "../utils";
+import { HTTPResponse, onError } from "../utils";
 
 /**
  * Controller responsável por lidar com as requisições relacionadas às tarefas (tasks).
@@ -33,8 +33,9 @@ export class TaskController {
         ...taskData,
       });
 
-      res.status(201).json({
-        success: true,
+      return HTTPResponse({
+        res,
+        statusCode: 201,
         message: "Tarefa criada com sucesso.",
         data: result.toJSON(),
       });
@@ -63,11 +64,14 @@ export class TaskController {
         },
       });
 
-      res.status(200).json({
-        success: true,
+      return HTTPResponse({
+        res,
+        statusCode: 200,
         message: "Tarefas listadas com sucesso.",
-        data: result.data.map((t) => t.toJSON()),
-        meta: result.meta,
+        data: {
+          items: result.data.map((t) => t.toJSON()),
+          pagination: result.meta,
+        },
       });
     } catch (error) {
       onError(error, res);
@@ -81,8 +85,9 @@ export class TaskController {
 
       const result = await this.taskService.getTaskById(String(id), userLoggedId);
 
-      res.status(200).json({
-        success: true,
+      return HTTPResponse({
+        res,
+        statusCode: 200,
         message: "Tarefa encontrada com sucesso.",
         data: result.toJSON(),
       });
@@ -104,8 +109,9 @@ export class TaskController {
         ...taskData,
       });
 
-      res.status(200).json({
-        success: true,
+      return HTTPResponse({
+        res,
+        statusCode: 200,
         message: "Tarefa atualizada com sucesso.",
         data: result.toJSON(),
       });
@@ -124,8 +130,9 @@ export class TaskController {
         userLoggedId
       );
 
-      res.status(200).json({
-        success: true,
+      return HTTPResponse({
+        res,
+        statusCode: 200,
         message: "Tarefa deletada com sucesso.",
         data: result.toJSON(),
       });

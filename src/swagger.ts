@@ -171,10 +171,18 @@ const doc = {
           success: { type: 'boolean', example: true },
           message: { type: 'string', example: 'Tarefas listadas com sucesso.' },
           data: {
-            $ref: '#/components/Task'
-          },
-          meta: {
-            $ref: '#/components/Pagination'
+            type: 'object',
+            properties: {
+              items: {
+                type: 'array',
+                items: {
+                  $ref: '#/components/Task'
+                }
+              },
+              pagination: {
+                $ref: '#/components/Pagination'
+              }
+            }
           }
         }
       },
@@ -216,6 +224,13 @@ const doc = {
           data: {
             $ref: '#/components/Task'
           }
+        }
+      },
+      apiHealthResponse: {
+        type: 'object',
+        properties: {
+          success: { type: 'boolean', example: true },
+          message: { type: 'string', example: 'A API está saudável.' }
         }
       }
     },
@@ -278,7 +293,7 @@ const doc = {
 };
 
 const outputFile = './swagger.json';
-const routes = ['./routes/task.routes.ts'];
+const routes = ['./routes/task.routes.ts', './routes/health.routes.ts'];
 
 /* NOTE: If you are using the express Router, you must pass in the 'routes' only the 
 root file where the route starts, such as index.js, app.js, routes.js, etc ... */

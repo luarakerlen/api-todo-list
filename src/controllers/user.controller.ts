@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { CreateUserDto } from '../dtos';
 import { UserService } from '../services';
-import { onError } from '../utils';
+import { HTTPResponse, onError } from '../utils';
 
 /**
  * Controller responsável por gerenciar requisições HTTP relacionadas a usuários.
@@ -27,9 +27,10 @@ export class UserController {
 
             const result = await this.userService.createUser(userData);
 
-            return res.status(201).json({
-                status: "ok",
-                message: "Created!",
+            return HTTPResponse({
+                res,
+                statusCode: 201,
+                message: "Criado!",
                 data: result.toJSON()
             });
 

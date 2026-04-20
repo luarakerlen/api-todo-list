@@ -21,26 +21,6 @@
     }
   ],
   "paths": {
-    "/health": {
-      "get": {
-        "tags": [
-          "Health"
-        ],
-        "description": "Endpoint de saúde para verificar se a API está funcionando corretamente.",
-        "responses": {
-          "200": {
-            "description": "API está saudável",
-            "content": {
-              "application/json": {
-                "example": {
-                  "status": "ok"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/tasks": {
       "get": {
         "tags": [
@@ -318,6 +298,26 @@
           }
         }
       }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "description": "Endpoint de saúde para verificar se a API está funcionando corretamente.",
+        "responses": {
+          "200": {
+            "description": "API está saudável",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/apiHealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -552,10 +552,18 @@
             "example": "Tarefas listadas com sucesso."
           },
           "data": {
-            "$ref": "#/components/Task"
-          },
-          "meta": {
-            "$ref": "#/components/Pagination"
+            "type": "object",
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/Task"
+                }
+              },
+              "pagination": {
+                "$ref": "#/components/Pagination"
+              }
+            }
           }
         }
       },
@@ -620,6 +628,19 @@
           },
           "data": {
             "$ref": "#/components/Task"
+          }
+        }
+      },
+      "apiHealthResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "A API está saudável."
           }
         }
       }
