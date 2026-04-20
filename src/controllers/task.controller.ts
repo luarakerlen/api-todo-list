@@ -35,7 +35,7 @@ export class TaskController {
 
       res.status(201).json({
         success: true,
-        message: "Task created successfully.",
+        message: "Tarefa criada com sucesso.",
         data: result.toJSON(),
       });
     } catch (error) {
@@ -65,7 +65,7 @@ export class TaskController {
 
       res.status(200).json({
         success: true,
-        message: "Tasks listed successfully.",
+        message: "Tarefas listadas com sucesso.",
         data: result.data.map((t) => t.toJSON()),
         meta: result.meta,
       });
@@ -83,7 +83,7 @@ export class TaskController {
 
       res.status(200).json({
         success: true,
-        message: "Task found successfully.",
+        message: "Tarefa encontrada com sucesso.",
         data: result.toJSON(),
       });
     } catch (error) {
@@ -106,7 +106,7 @@ export class TaskController {
 
       res.status(200).json({
         success: true,
-        message: "Task updated successfully.",
+        message: "Tarefa atualizada com sucesso.",
         data: result.toJSON(),
       });
     } catch (error) {
@@ -126,7 +126,7 @@ export class TaskController {
 
       res.status(200).json({
         success: true,
-        message: "Task deleted successfully.",
+        message: "Tarefa deletada com sucesso.",
         data: result.toJSON(),
       });
     } catch (error) {

@@ -104,7 +104,7 @@ export class TaskService {
     });
 
     if (!task || task.userId !== userId) {
-      throw new HTTPError(404, "Task not found");
+      throw new HTTPError(404, "Tarefa não encontrada.");
     }
 
     return this.mapToModel(task);
@@ -131,7 +131,7 @@ export class TaskService {
       description === undefined &&
       status === undefined
     ) {
-      throw new HTTPError(400, "No fields to update");
+      throw new HTTPError(400, "Nenhum campo para ser atualizado.");
     }
 
     const updatedTask = await prismaRepository.task.update({
