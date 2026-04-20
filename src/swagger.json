@@ -1,0 +1,262 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de todo list",
+    "description": "API para gerenciar uma lista de tarefas (todo list). A API permite que um usuário cadastrado crie e gerencie suas tarefas, incluindo a criação, leitura, atualização e exclusão de tarefas. Cada tarefa possui um título, descrição, status (pendente, em progresso ou concluída) e uma data de criação. A API é protegida por autenticação JWT, garantindo que apenas usuários autorizados possam acessar e modificar suas tarefas.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3030/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Health",
+      "description": "Endpoints relacionados à verificação de saúde da API."
+    },
+    {
+      "name": "Tasks",
+      "description": "Endpoints para gerenciamento de tarefas, incluindo criação, leitura, atualização e exclusão de tarefas."
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "description": "Endpoint de saúde para verificar se a API está funcionando corretamente.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/tasks": {
+      "get": {
+        "tags": [
+          "Tasks"
+        ],
+        "description": "Lista tarefas do usuário autenticado, com suporte a filtros e paginação.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/taskTitle"
+          },
+          {
+            "$ref": "#/components/parameters/taskStatus"
+          },
+          {
+            "$ref": "#/components/parameters/page"
+          },
+          {
+            "$ref": "#/components/parameters/pageSize"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Tasks"
+        ],
+        "description": "Cria uma nova tarefa para o usuário autenticado.",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createTaskSchema"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/{id}": {
+      "get": {
+        "tags": [
+          "Tasks"
+        ],
+        "description": "Recupera uma tarefa específica pelo seu ID.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/taskId"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Tasks"
+        ],
+        "description": "Atualiza uma tarefa existente pelo seu ID.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/taskId"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/updateTaskSchema"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Tasks"
+        ],
+        "description": "Exclui uma tarefa pelo seu ID.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/taskId"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "taskId": {
+        "name": "id",
+        "in": "path",
+        "description": "ID da tarefa",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "123e4567-e89b-12d3-a456-426614174000"
+        }
+      },
+      "taskTitle": {
+        "name": "title",
+        "in": "query",
+        "description": "Filtro por título da tarefa",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "example": "Comprar leite"
+        }
+      },
+      "taskStatus": {
+        "name": "status",
+        "in": "query",
+        "description": "Filtro por status da tarefa",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "in_progress",
+            "completed"
+          ],
+          "example": "pending"
+        }
+      },
+      "page": {
+        "name": "page",
+        "in": "query",
+        "description": "Número da página para paginação",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "example": 1
+        }
+      },
+      "pageSize": {
+        "name": "pageSize",
+        "in": "query",
+        "description": "Quantidade de itens por página para paginação",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "example": 10
+        }
+      }
+    },
+    "schemas": {
+      "createTaskSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Título da tarefa",
+            "example": "Comprar leite"
+          },
+          "description": {
+            "type": "string",
+            "description": "Descrição detalhada da tarefa",
+            "example": "Ir ao supermercado e comprar 2 litros de leite"
+          },
+          "status": {
+            "@enum": [
+              "pending",
+              "in_progress",
+              "completed"
+            ],
+            "type": "string",
+            "description": "Status da tarefa",
+            "example": "pending"
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "updateTaskSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Título da tarefa",
+            "example": "Comprar leite"
+          },
+          "description": {
+            "type": "string",
+            "description": "Descrição detalhada da tarefa",
+            "example": "Ir ao supermercado e comprar 2 litros de leite"
+          },
+          "status": {
+            "@enum": [
+              "pending",
+              "in_progress",
+              "completed"
+            ],
+            "type": "string",
+            "description": "Status da tarefa",
+            "example": "pending"
+          }
+        }
+      }
+    }
+  }
+}

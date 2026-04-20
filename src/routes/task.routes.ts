@@ -20,13 +20,36 @@ export class TaskRoutes {
         const router = express.Router();
         const controller = new TaskController();
 
-        router.get("/health", (_: express.Request, res: express.Response) => {
-            res.status(200).json({ status: "ok" });
-        });
+        router.get("/health",
+            /*  #swagger.tags = ['Health']
+                #swagger.description = 'Endpoint de saúde para verificar se a API está funcionando corretamente.'
+            */
+            (_: express.Request, res: express.Response) => {
+                res.status(200).json({ status: "ok" });
+            });
 
         // Protected routes with authentication
         router.get(
             "/tasks",
+            /*  #swagger.tags = ['Tasks']
+                #swagger.description = 'Lista tarefas do usuário autenticado, com suporte a filtros e paginação.'
+                
+                #swagger.parameters['title'] = {
+                    $ref: '#/components/parameters/taskTitle'
+                }
+
+                #swagger.parameters['status'] = {
+                    $ref: '#/components/parameters/taskStatus'
+                }
+
+                #swagger.parameters['page'] = {
+                    $ref: '#/components/parameters/page'
+                }
+
+                #swagger.parameters['pageSize'] = {
+                    $ref: '#/components/parameters/pageSize'
+                }
+            */
             // authMiddleware,
             dataValidation([
                 query("page").optional().isInt({ min: 1 }),
@@ -39,6 +62,20 @@ export class TaskRoutes {
 
         router.post(
             "/tasks",
+            /*  #swagger.tags = ['Tasks']
+                #swagger.description = 'Cria uma nova tarefa para o usuário autenticado.'
+
+                #swagger.requestBody = {
+                    required: true,
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: "#/components/schemas/createTaskSchema"
+                            }
+                        }
+                    }
+                }
+            */
             // authMiddleware,
             dataValidation([
                 body("title").isString().isLength({ min: 1 }),
@@ -55,14 +92,39 @@ export class TaskRoutes {
 
         router.get(
             "/tasks/:id",
+            /*  #swagger.tags = ['Tasks']
+                #swagger.description = 'Recupera uma tarefa específica pelo seu ID.'
+
+                #swagger.parameters['id'] = {
+                    $ref: '#/components/parameters/taskId'
+                }
+            */
             // authMiddleware,
             dataValidation([param("id").isUUID()]),
             controller.getTaskById,
         );
 
-        // Example of a PUT route with both path parameter and body validation
         router.put(
             "/tasks/:id",
+            /*  #swagger.tags = ['Tasks']
+                #swagger.description = 'Atualiza uma tarefa existente pelo seu ID.'
+
+                
+                #swagger.parameters['id'] = {
+                    $ref: '#/components/parameters/taskId'
+                }
+
+                #swagger.requestBody = {
+                    required: true,
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: "#/components/schemas/updateTaskSchema"
+                            }
+                        }
+                    }
+                }
+            */
             // authMiddleware,
             dataValidation([
                 param("id").isUUID(),
@@ -78,6 +140,13 @@ export class TaskRoutes {
 
         router.delete(
             "/tasks/:id",
+            /*  #swagger.tags = ['Tasks']
+                #swagger.description = 'Exclui uma tarefa pelo seu ID.'
+
+                #swagger.parameters['id'] = {
+                    $ref: '#/components/parameters/taskId'
+                }
+            */
             // authMiddleware,
             dataValidation([param("id").isUUID()]),
             controller.deleteTask,
