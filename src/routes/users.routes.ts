@@ -38,10 +38,6 @@ export class UsersRoutes {
             userController.createUser(req, res);
         })
 
-        router.get("/users/auth", async (req: Request, res: Response) => {
-
-        })
-
         return router
     }
 
