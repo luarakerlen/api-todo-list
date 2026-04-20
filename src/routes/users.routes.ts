@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { UserService } from '../services';
-import { UserController } from './../controllers/user.controller';
-import { UserRepository } from './../database/user.repository';
+import { UserController } from './../controllers';
+import { UserRepository } from './../database';
 
 export class UsersRoutes {
 
