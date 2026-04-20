@@ -23,6 +23,15 @@ export class TaskRoutes {
         router.get("/health",
             /*  #swagger.tags = ['Health']
                 #swagger.description = 'Endpoint de saúde para verificar se a API está funcionando corretamente.'
+
+                #swagger.responses[200] = {
+                    description: 'API está saudável',
+                    content: {
+                        "application/json": {
+                            example: { status: "ok" }
+                        }
+                    }
+                }
             */
             (_: express.Request, res: express.Response) => {
                 res.status(200).json({ status: "ok" });
@@ -48,6 +57,35 @@ export class TaskRoutes {
 
                 #swagger.parameters['pageSize'] = {
                     $ref: '#/components/parameters/pageSize'
+                }
+
+                #swagger.responses[200] = {
+                    description: 'Lista das tarefas do usuário autenticado e dados de paginação.',
+                    schema: {
+                        $ref: '#/components/schemas/listTasksResponse' 
+                    }
+                }
+
+                #swagger.responses[400] = {
+                    description: 'Requisição inválida, com detalhes dos erros de validação.',
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: '#/components/Error400Response'
+                            }
+                        }
+                    }
+                }
+
+                #swagger.responses[500] = {
+                    description: 'Erro interno do servidor.',
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: '#/components/Error500Response'
+                            }
+                        }
+                    }
                 }
             */
             // authMiddleware,
@@ -75,6 +113,39 @@ export class TaskRoutes {
                         }
                     }
                 }
+
+                #swagger.responses[201] = {
+                    description: 'Tarefa criada com sucesso.',
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: '#/components/schemas/createTaskResponse'
+                            }
+                        }
+                    }
+                }
+
+                #swagger.responses[400] = {
+                    description: 'Requisição inválida, com detalhes dos erros de validação.',
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: '#/components/Error400Response'
+                            }
+                        }
+                    }
+                }
+
+                #swagger.responses[500] = {
+                    description: 'Erro interno do servidor.',
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: '#/components/Error500Response'
+                            }
+                        }
+                    }
+                }
             */
             // authMiddleware,
             dataValidation([
@@ -97,6 +168,50 @@ export class TaskRoutes {
 
                 #swagger.parameters['id'] = {
                     $ref: '#/components/parameters/taskId'
+                }
+
+                #swagger.responses[200] = {
+                    description: 'Detalhes da tarefa encontrada.',
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: '#/components/schemas/getTaskResponse'
+                            }
+                        }
+                    }
+                }
+
+                #swagger.responses[404] = {
+                    description: 'Tarefa não encontrada para o ID fornecido ou não pertence ao usuário autenticado.',
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: '#/components/Error404Response'
+                            }
+                        }
+                    }
+                }
+
+                #swagger.responses[400] = {
+                    description: 'Requisição inválida, com detalhes dos erros de validação.',
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: '#/components/Error400Response'
+                            }
+                        }
+                    }
+                }
+
+                #swagger.responses[500] = {
+                    description: 'Erro interno do servidor.',
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: '#/components/Error500Response'
+                            }
+                        }
+                    }
                 }
             */
             // authMiddleware,
@@ -124,6 +239,50 @@ export class TaskRoutes {
                         }
                     }
                 }
+
+                #swagger.responses[200] = {
+                    description: 'Tarefa atualizada com sucesso.',
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: '#/components/schemas/updateTaskResponse'
+                            }
+                        }
+                    }
+                }
+
+                #swagger.responses[404] = {
+                    description: 'Tarefa não encontrada para o ID fornecido ou não pertence ao usuário autenticado.',
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: '#/components/Error404Response'
+                            }
+                        }
+                    }
+                }
+
+                #swagger.responses[400] = {
+                    description: 'Requisição inválida, com detalhes dos erros de validação.',
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: '#/components/Error400Response'
+                            }
+                        }
+                    }
+                }
+
+                #swagger.responses[500] = {
+                    description: 'Erro interno do servidor.',
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: '#/components/Error500Response'
+                            }
+                        }
+                    }
+                }
             */
             // authMiddleware,
             dataValidation([
@@ -145,6 +304,50 @@ export class TaskRoutes {
 
                 #swagger.parameters['id'] = {
                     $ref: '#/components/parameters/taskId'
+                }
+
+                #swagger.responses[200] = {
+                    description: 'Tarefa deletada com sucesso.',
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: '#/components/schemas/deleteTaskResponse'
+                            }
+                        }
+                    }
+                }
+
+                #swagger.responses[404] = {
+                    description: 'Tarefa não encontrada para o ID fornecido ou não pertence ao usuário autenticado.',
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: '#/components/Error404Response'
+                            }
+                        }
+                    }
+                }
+
+                #swagger.responses[400] = {
+                    description: 'Requisição inválida, com detalhes dos erros de validação.',
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: '#/components/Error400Response'
+                            }
+                        }
+                    }
+                }
+
+                #swagger.responses[500] = {
+                    description: 'Erro interno do servidor.',
+                    content: {
+                        "application/json": {
+                            schema: {
+                                $ref: '#/components/Error500Response'
+                            }
+                        }
+                    }
                 }
             */
             // authMiddleware,

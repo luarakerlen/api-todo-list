@@ -25,6 +25,94 @@ const doc = {
     }
   ],
   components: {
+    Task: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'string',
+          description: 'ID da tarefa',
+          example: '123e4567-e89b-12d3-a456-426614174000'
+        },
+        title: {
+          type: 'string',
+          description: 'Título da tarefa',
+          example: 'Comprar leite'
+        },
+        description: {
+          type: 'string',
+          description: 'Descrição detalhada da tarefa',
+          example: 'Ir ao supermercado e comprar 2 litros de leite'
+        },
+        status: {
+          '@enum': [
+            "pending",
+            "in_progress",
+            "completed"
+          ],
+          type: 'string',
+          description: 'Status da tarefa',
+          example: 'pending'
+        },
+        createdAt: {
+          type: 'string',
+          format: 'date-time',
+          description: 'Data e hora de criação da tarefa',
+          example: '2024-06-01T12:00:00Z'
+        },
+        updatedAt: {
+          type: 'string',
+          format: 'date-time',
+          description: 'Data e hora da última atualização da tarefa',
+          example: '2024-06-02T15:30:00Z'
+        }
+      }
+    },
+    Pagination: {
+      type: 'object',
+      properties: {
+        page: {
+          type: 'integer',
+          description: 'Número da página atual',
+          example: 1
+        },
+        pageSize: {
+          type: 'integer',
+          description: 'Número de itens por página',
+          example: 10
+        },
+        total: {
+          type: 'integer',
+          description: 'Número total de itens disponíveis',
+          example: 100
+        },
+        totalPages: {
+          type: 'integer',
+          description: 'Número total de páginas disponíveis',
+          example: 20
+        },
+      }
+    },
+    Error400Response: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: false },
+        message: { type: 'string', example: 'Requisição inválida' }
+      }
+    },
+    Error404Response: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: false },
+        message: { type: 'string', example: 'Recurso não encontrado' }
+      }
+    },
+    Error500Response: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: false },
+        message: { type: 'string', example: 'Internal server error' }
+      }
+    },
     '@schemas': {
       createTaskSchema: {
         type: 'object',
@@ -74,6 +162,59 @@ const doc = {
             type: 'string',
             description: 'Status da tarefa',
             example: 'pending'
+          }
+        }
+      },
+      listTasksResponse: {
+        type: 'object',
+        properties: {
+          success: { type: 'boolean', example: true },
+          message: { type: 'string', example: 'Tarefas listadas com sucesso.' },
+          data: {
+            $ref: '#/components/Task'
+          },
+          meta: {
+            $ref: '#/components/Pagination'
+          }
+        }
+      },
+      createTaskResponse: {
+        type: 'object',
+        properties: {
+          success: { type: 'boolean', example: true },
+          message: { type: 'string', example: 'Tarefa criada com sucesso.' },
+          data: {
+            $ref: '#/components/Task'
+          }
+        }
+      },
+      getTaskResponse: {
+        type: 'object',
+        properties: {
+          success: { type: 'boolean', example: true },
+          message: { type: 'string', example: 'Tarefa encontrada com sucesso.' },
+          data: {
+            $ref: '#/components/Task'
+          }
+        }
+      },
+      updateTaskResponse: {
+        type: 'object',
+        properties: {
+          success: { type: 'boolean', example: true },
+          message: { type: 'string', example: 'Tarefa atualizada com sucesso.' },
+          data: {
+            $ref: '#/components/Task'
+          }
+        }
+      },
+      deleteTaskResponse: {
+        type: 'object',
+        properties: {
+          success: { type: 'boolean', example: true },
+          message: { type: 'string', example: 'Tarefa deletada com sucesso.' },
+          data: {
+            $ref: '#/components/Task'
           }
         }
       }
