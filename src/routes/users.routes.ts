@@ -22,7 +22,6 @@ export class UsersRoutes {
             userController.createUser(req, res);
         })
 
-        return router
+        return router;
     }
-
 }
