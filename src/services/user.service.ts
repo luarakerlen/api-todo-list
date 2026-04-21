@@ -3,7 +3,6 @@ import * as bcrypt from 'bcrypt';
 import { UserRepository } from '../database';
 import { CreateUserDto } from '../dtos';
 import { User } from '../models';
-import { JwtService } from './jwt.service';
 
 /**
  * Service responsável pelas regras de negócio relacionadas a Usuário.
@@ -17,8 +16,7 @@ import { JwtService } from './jwt.service';
 export class UserService {
 
   constructor(
-    private userRepository: UserRepository,
-    private jwtService: JwtService
+    private userRepository: UserRepository
   ) { }
   /**
    * Cria um novo usuário no sistema.
@@ -27,7 +25,7 @@ export class UserService {
    * @returns Usuário criado no formato de domínio (User)
    */
   public async createUser(user: CreateUserDto): Promise<User> {
-    const hashedPassword = await bcrypt.hash(user.password, 10);
+    const hashedPassword = await bcrypt.hash(user.password, 8);
 
     const newUser = await this.userRepository.createUser({
       name: user.name,
