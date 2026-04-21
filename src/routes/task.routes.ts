@@ -1,7 +1,7 @@
-import express from "express";
-import { body, param, query } from "express-validator";
-import { dataValidation } from "../middlewares";
-import { taskController } from "../container";
+import express from 'express';
+import { body, param, query } from 'express-validator';
+import { authMiddleware, dataValidation } from '../middlewares';
+import { taskController } from '../container';
 
 /**
  * Classe TaskRoutes define as rotas para operações relacionadas a tarefas, incluindo:
@@ -15,13 +15,13 @@ import { taskController } from "../container";
  * As rotas são organizadas em uma classe para melhor modularidade e manutenção.
  */
 export class TaskRoutes {
-    public static bind() {
-        const router = express.Router();
+  public static bind() {
+    const router = express.Router();
 
-        // Protected routes with authentication
-        router.get(
-            "/tasks",
-            /*  #swagger.tags = ['Tasks']
+    // Protected routes with authentication
+    router.get(
+      '/tasks',
+      /*  #swagger.tags = ['Tasks']
                 #swagger.description = 'Lista tarefas do usuário autenticado, com suporte a filtros e paginação.'
                 
                 #swagger.parameters['title'] = {
@@ -69,19 +69,21 @@ export class TaskRoutes {
                     }
                 }
             */
-            // authMiddleware,
-            dataValidation([
-                query("page").optional().isInt({ min: 1 }),
-                query("pageSize").optional().isInt({ min: 1 }),
-                query("status").optional().isIn(["pending", "in_progress", "completed"]),
-                query("title").optional().isString(),
-            ]),
-            taskController.listTasks,
-        );
+      authMiddleware,
+      dataValidation([
+        query('page').optional().isInt({ min: 1 }),
+        query('pageSize').optional().isInt({ min: 1 }),
+        query('status')
+          .optional()
+          .isIn(['pending', 'in_progress', 'completed']),
+        query('title').optional().isString(),
+      ]),
+      taskController.listTasks,
+    );
 
-        router.post(
-            "/tasks",
-            /*  #swagger.tags = ['Tasks']
+    router.post(
+      '/tasks',
+      /*  #swagger.tags = ['Tasks']
                 #swagger.description = 'Cria uma nova tarefa para o usuário autenticado.'
 
                 #swagger.requestBody = {
@@ -128,23 +130,25 @@ export class TaskRoutes {
                     }
                 }
             */
-            // authMiddleware,
-            dataValidation([
-                body("title").isString().isLength({ min: 1 }),
+      authMiddleware,
+      dataValidation([
+        body('title').isString().isLength({ min: 1 }),
 
-                // optional fields
-                body("description").optional().isString(),
-                body("status")
-                    .optional()
-                    .isIn(["pending", "in_progress", "completed"])
-                    .withMessage("Status deve ser 'pending', 'in_progress' ou 'completed'"),
-            ]),
-            taskController.createTask,
-        );
+        // optional fields
+        body('description').optional().isString(),
+        body('status')
+          .optional()
+          .isIn(['pending', 'in_progress', 'completed'])
+          .withMessage(
+            "Status deve ser 'pending', 'in_progress' ou 'completed'",
+          ),
+      ]),
+      taskController.createTask,
+    );
 
-        router.get(
-            "/tasks/:id",
-            /*  #swagger.tags = ['Tasks']
+    router.get(
+      '/tasks/:id',
+      /*  #swagger.tags = ['Tasks']
                 #swagger.description = 'Recupera uma tarefa específica pelo seu ID.'
 
                 #swagger.parameters['id'] = {
@@ -195,14 +199,14 @@ export class TaskRoutes {
                     }
                 }
             */
-            // authMiddleware,
-            dataValidation([param("id").isUUID()]),
-            taskController.getTaskById,
-        );
+      authMiddleware,
+      dataValidation([param('id').isUUID()]),
+      taskController.getTaskById,
+    );
 
-        router.put(
-            "/tasks/:id",
-            /*  #swagger.tags = ['Tasks']
+    router.put(
+      '/tasks/:id',
+      /*  #swagger.tags = ['Tasks']
                 #swagger.description = 'Atualiza uma tarefa existente pelo seu ID.'
 
                 
@@ -265,22 +269,24 @@ export class TaskRoutes {
                     }
                 }
             */
-            // authMiddleware,
-            dataValidation([
-                param("id").isUUID(),
-                body("title").optional().isString(),
-                body("description").optional().isString(),
-                body("status")
-                    .optional()
-                    .isIn(["pending", "in_progress", "completed"])
-                    .withMessage("Status deve ser 'pending', 'in_progress' ou 'completed'"),
-            ]),
-            taskController.updateTask,
-        );
+      authMiddleware,
+      dataValidation([
+        param('id').isUUID(),
+        body('title').optional().isString(),
+        body('description').optional().isString(),
+        body('status')
+          .optional()
+          .isIn(['pending', 'in_progress', 'completed'])
+          .withMessage(
+            "Status deve ser 'pending', 'in_progress' ou 'completed'",
+          ),
+      ]),
+      taskController.updateTask,
+    );
 
-        router.delete(
-            "/tasks/:id",
-            /*  #swagger.tags = ['Tasks']
+    router.delete(
+      '/tasks/:id',
+      /*  #swagger.tags = ['Tasks']
                 #swagger.description = 'Exclui uma tarefa pelo seu ID.'
 
                 #swagger.parameters['id'] = {
@@ -331,11 +337,11 @@ export class TaskRoutes {
                     }
                 }
             */
-            // authMiddleware,
-            dataValidation([param("id").isUUID()]),
-            taskController.deleteTask,
-        );
+      authMiddleware,
+      dataValidation([param('id').isUUID()]),
+      taskController.deleteTask,
+    );
 
-        return router;
-    }
+    return router;
+  }
 }
