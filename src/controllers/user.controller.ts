@@ -20,8 +20,7 @@ export class UserController {
      * 
      * @returns {201} Object - Usuário criado com sucesso
      */
-    public async createUser(req: Request, res: Response) {
-
+    public createUser = async (req: Request, res: Response) => {
         try {
             const userData: CreateUserDto = req.body;
 
@@ -30,7 +29,7 @@ export class UserController {
             return HTTPResponse({
                 res,
                 statusCode: 201,
-                message: "Criado!",
+                message: "Usuário criado com sucesso.",
                 data: result.toJSON()
             });
 
