@@ -1,8 +1,7 @@
 import express from "express";
 import { body, param, query } from "express-validator";
-
-import { TaskController } from "../controllers";
 import { dataValidation } from "../middlewares";
+import { taskController } from "../container";
 
 /**
  * Classe TaskRoutes define as rotas para operações relacionadas a tarefas, incluindo:
@@ -18,7 +17,6 @@ import { dataValidation } from "../middlewares";
 export class TaskRoutes {
     public static bind() {
         const router = express.Router();
-        const controller = new TaskController();
 
         // Protected routes with authentication
         router.get(
@@ -78,7 +76,7 @@ export class TaskRoutes {
                 query("status").optional().isIn(["pending", "in_progress", "completed"]),
                 query("title").optional().isString(),
             ]),
-            controller.listTasks,
+            taskController.listTasks,
         );
 
         router.post(
@@ -141,7 +139,7 @@ export class TaskRoutes {
                     .isIn(["pending", "in_progress", "completed"])
                     .withMessage("Status deve ser 'pending', 'in_progress' ou 'completed'"),
             ]),
-            controller.createTask,
+            taskController.createTask,
         );
 
         router.get(
@@ -199,7 +197,7 @@ export class TaskRoutes {
             */
             // authMiddleware,
             dataValidation([param("id").isUUID()]),
-            controller.getTaskById,
+            taskController.getTaskById,
         );
 
         router.put(
@@ -277,7 +275,7 @@ export class TaskRoutes {
                     .isIn(["pending", "in_progress", "completed"])
                     .withMessage("Status deve ser 'pending', 'in_progress' ou 'completed'"),
             ]),
-            controller.updateTask,
+            taskController.updateTask,
         );
 
         router.delete(
@@ -335,7 +333,7 @@ export class TaskRoutes {
             */
             // authMiddleware,
             dataValidation([param("id").isUUID()]),
-            controller.deleteTask,
+            taskController.deleteTask,
         );
 
         return router;

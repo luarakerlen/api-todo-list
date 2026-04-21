@@ -20,7 +20,7 @@ import { HTTPResponse, onError } from "../utils";
  * de forma consistente para o cliente em caso de falhas.
  */
 export class TaskController {
-  private taskService = new TaskService();
+  constructor(private taskService: TaskService) { }
 
   public createTask = async (req: Request, res: Response) => {
     try {
