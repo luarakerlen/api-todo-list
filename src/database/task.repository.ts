@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
 import { CreateTaskDto, GetTasksDto, UpdateTaskDto } from "../dtos";
+import { prisma } from "./prisma.repository";
 
 /**
  * Repository responsável por todas as operações de banco relacionadas às Tarefas.
@@ -8,7 +8,6 @@ import { CreateTaskDto, GetTasksDto, UpdateTaskDto } from "../dtos";
  * evitando que a camada de Service dependa diretamente do ORM.
  */
 export class TaskRepository {
-  private prisma = new PrismaClient();
 
   /**
    * Cria uma nova task para o usuário especificado.
@@ -22,7 +21,7 @@ export class TaskRepository {
    * @returns Task criada retornada pelo Prisma
    */
   async createTask(data: CreateTaskDto) {
-    return this.prisma.task.create({ data });
+    return prisma.task.create({ data });
   }
 
   /**
@@ -38,7 +37,7 @@ export class TaskRepository {
    * @returns Uma resposta paginada contendo as tasks do usuário especificado.
    */
   async listTasks(params: GetTasksDto) {
-    return this.prisma.task.findMany({
+    return prisma.task.findMany({
       ...params,
       orderBy: {
         createdAt: "desc",
@@ -55,7 +54,7 @@ export class TaskRepository {
     * @returns A task encontrada.
     */
   public async getTaskById(taskId: string, userId: string) {
-    return await this.prisma.task.findUnique({
+    return await prisma.task.findUnique({
       where: { id: taskId, userId },
     });
   }
@@ -73,7 +72,7 @@ export class TaskRepository {
    * @returns A task atualizada.
    */
   public async updateTask({ taskId, userId, ...data }: UpdateTaskDto) {
-    return await this.prisma.task.update({
+    return await prisma.task.update({
       where: { id: taskId, userId },
       data,
     });
@@ -88,7 +87,7 @@ export class TaskRepository {
    * @returns A task deletada.
    */
   public async deleteTask(taskId: string, userId: string) {
-    return await this.prisma.task.delete({
+    return await prisma.task.delete({
       where: { id: taskId, userId },
     });
   }
