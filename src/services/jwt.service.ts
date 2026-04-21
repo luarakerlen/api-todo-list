@@ -1,31 +1,35 @@
-import { sign } from 'jsonwebtoken';
+import { sign, verify } from 'jsonwebtoken';
 import { getJwtOptions } from '../config';
 
 interface JwtUserPayload {
-    id: string,
-    username: string
+  id: string;
+  username: string;
 }
 export class JwtService {
-    //header. payload. signature
+  //header. payload. signature
+  public createToken(data: JwtUserPayload) {
+    const secret = process.env.JWT_SECRET;
 
-    public createToken(data: JwtUserPayload) {
-
-        const secret = process.env.JWT_SECRET;
-
-        if (!secret) {
-            throw new Error("JWT_SECRET não está definido");
-        }
-
-        const token = sign(
-            data,
-            secret,
-            getJwtOptions()// <-SignOptions
-        );
-
-        return token;
+    if (!secret) {
+      throw new Error('JWT_SECRET não está definido');
     }
 
-    public validateToken() {
+    const token = sign(
+      data,
+      secret,
+      getJwtOptions(), // <-SignOptions
+    );
 
+    return token;
+  }
+
+  public verifyToken(token: string): JwtUserPayload {
+    const secret = process.env.JWT_SECRET;
+
+    if (!secret) {
+      throw new Error('JWT_SECRET não está definido');
     }
+
+    return verify(token, secret) as JwtUserPayload;
+  }
 }
