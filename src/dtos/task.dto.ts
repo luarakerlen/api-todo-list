@@ -26,3 +26,19 @@ export interface ListTasksDto {
     pageSize?: number;
   };
 }
+
+// DTOs específicos para o TaskRepository
+export interface GetTasksWhereDto {
+  userId: string;
+  title?: {
+    contains: string;
+    mode: "insensitive";
+  };
+  status?: TaskStatus;
+}
+
+export interface GetTasksDto {
+  where: GetTasksWhereDto;
+  skip: number;
+  take: number;
+}

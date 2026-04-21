@@ -1,13 +1,13 @@
 import prismaRepository from "../database/prisma.repository";
 import { Task as TaskEntity } from "@prisma/client";
 import { Task } from "../models";
-import { CreateTaskDto, UpdateTaskDto, ListTasksDto } from "../dtos";
+import { CreateTaskDto, UpdateTaskDto, ListTasksDto, GetTasksWhereDto } from "../dtos";
 import { PaginatedResponse } from "../shared/types";
 import { HTTPError } from "../utils";
+import { TaskRepository } from "../database";
 
 export class TaskService {
-
-  constructor() { }
+  constructor(private taskRepository: TaskRepository) { }
 
   /**
    * Cria uma nova task para o usuário especificado.
@@ -21,14 +21,14 @@ export class TaskService {
    * @returns A task criada, mapeada para o modelo Task.
    */
   public async createTask({ userId, title, description, status }: CreateTaskDto): Promise<Task> {
-    const newTask = await prismaRepository.task.create({
-      data: {
-        userId,
-        title,
-        ...(description !== undefined && { description }),
-        ...(status !== undefined && { status }),
-      }
-    });
+    const data = {
+      userId,
+      title,
+      ...(description !== undefined && { description }),
+      ...(status !== undefined && { status }),
+    }
+
+    const newTask = await this.taskRepository.createTask(data);
 
     return this.mapToModel(newTask);
   }
@@ -47,7 +47,7 @@ export class TaskService {
    */
   public async listTasks({ userId, filters, pagination }: ListTasksDto): Promise<PaginatedResponse<Task>> {
     /* Filters */
-    const where: any = { userId };
+    const where: GetTasksWhereDto = { userId };
 
     if (filters?.title) {
       where.title = {
@@ -67,13 +67,10 @@ export class TaskService {
     const totalTasks = await prismaRepository.task.count({ where });
 
     /* Fetching data */
-    const tasks = await prismaRepository.task.findMany({
+    const tasks = await this.taskRepository.listTasks({
       where,
       skip: (page - 1) * pageSize,
       take: pageSize,
-      orderBy: {
-        createdAt: "desc",
-      }
     })
 
     const data = tasks.map((task) => this.mapToModel(task));
@@ -99,11 +96,9 @@ export class TaskService {
    * @returns A task encontrada, mapeada para o modelo Task.
    */
   public async getTaskById(taskId: string, userId: string): Promise<Task> {
-    const task = await prismaRepository.task.findUnique({
-      where: { id: taskId },
-    });
+    const task = await this.taskRepository.getTaskById(taskId, userId);
 
-    if (!task || task.userId !== userId) {
+    if (!task) {
       throw new HTTPError(404, "Tarefa não encontrada.");
     }
 
@@ -124,8 +119,6 @@ export class TaskService {
    * @returns A task atualizada, mapeada para o modelo Task.
    */
   public async updateTask({ taskId, userId, title, description, status }: UpdateTaskDto): Promise<Task> {
-    const taskToBeUpdated = await this.getTaskById(taskId, userId);
-
     if (
       title === undefined &&
       description === undefined &&
@@ -134,13 +127,18 @@ export class TaskService {
       throw new HTTPError(400, "Nenhum campo para ser atualizado.");
     }
 
-    const updatedTask = await prismaRepository.task.update({
-      where: { id: taskToBeUpdated.toJSON().id },
-      data: {
-        ...(title !== undefined && { title }),
-        ...(description !== undefined && { description }),
-        ...(status !== undefined && { status }),
-      }
+    const taskToBeUpdated = await this.getTaskById(taskId, userId);
+
+    const data = {
+      ...(title !== undefined && { title }),
+      ...(description !== undefined && { description }),
+      ...(status !== undefined && { status }),
+    }
+
+    const updatedTask = await this.taskRepository.updateTask({
+      taskId: taskToBeUpdated.toJSON().id,
+      userId,
+      ...data
     });
 
     return this.mapToModel(updatedTask);
@@ -158,9 +156,7 @@ export class TaskService {
   public async deleteTask(taskId: string, userId: string): Promise<Task> {
     const taskToBeDeleted = await this.getTaskById(taskId, userId);
 
-    const taskDeleted = await prismaRepository.task.delete({
-      where: { id: taskToBeDeleted.toJSON().id },
-    });
+    const taskDeleted = await this.taskRepository.deleteTask(taskToBeDeleted.toJSON().id, userId);
 
     return this.mapToModel(taskDeleted);
   }
