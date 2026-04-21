@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { JwtService } from '../services/jwt.service';
+import { JwtService } from '../services';
 import { HTTPResponse } from '../utils';
 
 export const authMiddleware = (
@@ -9,7 +9,6 @@ export const authMiddleware = (
 ) => {
   try {
     const authHeader = req.headers.authorization;
-    console.log('Auth Header:', authHeader); // Log do header de autorização
 
     if (!authHeader) {
       return HTTPResponse({
