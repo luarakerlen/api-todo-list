@@ -106,9 +106,9 @@ Este repositório é um template no GitHub. Para usá-lo:
 
 ```
 ├── src/
+│   ├── container/       # Fluxo de instanciação dos controladores
 │   ├── controllers/     # Controladores da API
-│   ├── database/        # Configurações do banco de
-dados
+│   ├── database/        # Configurações do banco de dados, contendo os repositories
 │   ├── docs/            # Utilitários (imagens)
 │   ├── dtos/            # Data Transfer Objects
 │   ├── envs/            # Configurações de ambiente
@@ -116,6 +116,7 @@ dados
 │   ├── models/          # Modelos de dados
 │   ├── routes/          # Definições de rotas
 │   ├── services/        # Lógica de negócio
+│   ├── shared/          # Arquivos compartilhados dentre todos os arquivos do sistema
 │   ├── utils/           # Utilitários
 │   ├── app.ts           # Configuração do Express
 │   └── server.ts        # Ponto de entrada da aplicação
@@ -146,22 +147,38 @@ dados
 - **ts-node-dev**: Ferramenta para desenvolvimento com TypeScript e autoreload.
 - **Swagger**: Ferramenta para documentação da API.
 
-## 🎯 Decisões de projeto
+## 🎯 Decisões de projeto adotadas
 
 - Documentação de rotas, controllers e services com TSDocs.
 - Documentação da API com Swagger.
 - Utilização de Docker.
 - Mensagens de erro em português.
+- Utilização do Repository Pattern.
+- Padronização de respostas HTTP através do HTTPResponse
 
 ## 📊 Funcionalidades
 
-- **Cadastro de usuários**
-- **Autenticação de usuários (JWT)**
-- **Criação de tarefas**
-- **Listagem de tarefas do usuário autenticado**
-- **Busca de tarefa por ID**
-- **Atualização de tarefas**
-- **Remoção de tarefas**
+- [x] Cadastro de usuários
+- [x] Autenticação de usuários (JWT)
+- [x] Segurança no salvamento da senha
+- [x] Rotas de tarefas protegidas
+- [x] Criação de tarefas
+- [x] Listagem de tarefas do usuário autenticado
+- [x] Busca de tarefa por ID
+- [x] Atualização de tarefas
+- [x] Remoção de tarefas
+
+## Funcionalidades extras implementadas
+
+- [x] Listagem de tarefas com paginação
+- [x] Filtragem de tarefas por status
+- [x] Busca de tarefas por título
+- [x] Docker
+- [ ] Testes automatizados
+- [ ] Refresh token
+- [ ] Deploy da API
+- [ ] Logs estruturados
+- [ ] Rate limiting
 
 ## 📌 End Points Disponíveis
 
