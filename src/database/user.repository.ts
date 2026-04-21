@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { CreateUserDto } from "../dtos";
+import { CreateUserDto, LoginDto } from "../dtos";
 
 /**
  * Repository responsável por todas as operações de banco relacionadas a Usuário.
@@ -18,6 +18,14 @@ export class UserRepository {
     async createUser(data: CreateUserDto) {
         return this.prisma.user.create({
             data
+        })
+    }
+
+    async findUserByEmail(data: LoginDto) {
+        return this.prisma.user.findUnique({
+            where: {
+                email: data.email
+            }
         })
     }
 }

@@ -1,14 +1,9 @@
 import express, { Request, Response } from 'express';
-import { UserService } from '../services';
-import { UserController } from './../controllers';
-import { UserRepository } from './../database';
+import { userController } from '../container';
 
 export class UsersRoutes {
-
     public static bind() {
         const router = express.Router();
-        const userController = new UserController(new UserService(new UserRepository()));
-
         /**
          * @route POST /users
          * @description Endpoint responsável por criar um novo usuário no sistema
@@ -27,6 +22,6 @@ export class UsersRoutes {
             userController.createUser(req, res);
         })
 
-        return router
+        return router;
     }
 }
