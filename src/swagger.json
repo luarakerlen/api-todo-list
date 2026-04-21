@@ -16,6 +16,14 @@
       "description": "Endpoints relacionados à verificação de saúde da API."
     },
     {
+      "name": "Users",
+      "description": "Endpoints relacionados ao gerenciamento de usuários, incluindo registro, login e atualização de perfil."
+    },
+    {
+      "name": "Auth",
+      "description": "Endpoints relacionados à autenticação, como login e logout."
+    },
+    {
       "name": "Tasks",
       "description": "Endpoints para gerenciamento de tarefas, incluindo criação, leitura, atualização e exclusão de tarefas."
     }
@@ -67,6 +75,16 @@
               }
             }
           },
+          "401": {
+            "description": "Token inválido ou expirado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/Error401TokenInvalidoResponse"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Erro interno do servidor.",
             "content": {
@@ -101,6 +119,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/Error400Response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou expirado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/Error401TokenInvalidoResponse"
                 }
               }
             }
@@ -160,6 +188,16 @@
               }
             }
           },
+          "401": {
+            "description": "Token inválido ou expirado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/Error401TokenInvalidoResponse"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Tarefa não encontrada para o ID fornecido ou não pertence ao usuário autenticado.",
             "content": {
@@ -209,6 +247,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/Error400Response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou expirado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/Error401TokenInvalidoResponse"
                 }
               }
             }
@@ -276,6 +324,16 @@
               }
             }
           },
+          "401": {
+            "description": "Token inválido ou expirado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/Error401TokenInvalidoResponse"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Tarefa não encontrada para o ID fornecido ou não pertence ao usuário autenticado.",
             "content": {
@@ -316,11 +374,167 @@
               }
             }
           }
+        },
+        "security": []
+      }
+    },
+    "/users": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "description": "Endpoint responsável por criar um novo usuário no sistema. Recebe os dados do usuário (name, email e password), envia para o UserController que processa a criação e persiste no banco de dados.",
+        "responses": {
+          "201": {
+            "description": "Usuário criado com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/createUserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida, com detalhes dos erros de validação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/Error400Response"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflito, email já existe.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/Error409Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/Error500Response"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createUserSchema"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "Endpoint responsável por autenticar um usuário e gerar um token JWT. Recebe as credenciais do usuário (email e password), envia para o AuthController que processa a autenticação, verifica as credenciais e retorna um token JWT se as credenciais forem válidas.",
+        "responses": {
+          "200": {
+            "description": "Autenticação realizada com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/loginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Requisição inválida, com detalhes dos erros de validação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/Error400Response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credenciais inválidas.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/Error401CredentialsResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/Error500Response"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/loginSchema"
+              }
+            }
+          }
         }
       }
     }
   },
   "components": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "ID do usuário",
+          "example": "123e4567-e89b-12d3-a456-426614174000"
+        },
+        "name": {
+          "type": "string",
+          "description": "Nome do usuário",
+          "example": "João Silva"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Email do usuário",
+          "example": "joao.silva@example.com"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Data e hora de criação do usuário",
+          "example": "2024-06-01T12:00:00Z"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Data e hora da última atualização do usuário",
+          "example": "2024-06-02T15:30:00Z"
+        }
+      }
+    },
     "Task": {
       "type": "object",
       "properties": {
@@ -401,6 +615,45 @@
         }
       }
     },
+    "Error401CredentialsResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": false
+        },
+        "message": {
+          "type": "string",
+          "example": "E-mail ou senha inválidos"
+        }
+      }
+    },
+    "Error401TokenInvalidoResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": false
+        },
+        "message": {
+          "type": "string",
+          "example": "Token inválido ou expirado"
+        }
+      }
+    },
+    "Error401TokenAusenteResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": false
+        },
+        "message": {
+          "type": "string",
+          "example": "Token não fornecido"
+        }
+      }
+    },
     "Error404Response": {
       "type": "object",
       "properties": {
@@ -411,6 +664,23 @@
         "message": {
           "type": "string",
           "example": "Recurso não encontrado"
+        }
+      }
+    },
+    "Error409Response": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": false
+        },
+        "message": {
+          "type": "string",
+          "example": "Falha de validação: valor duplicado"
+        },
+        "details": {
+          "type": "string",
+          "example": "email já existe."
         }
       }
     },
@@ -487,6 +757,52 @@
       }
     },
     "schemas": {
+      "createUserSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Nome do usuário",
+            "example": "João Silva"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email do usuário",
+            "example": "joao.silva@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "Senha do usuário",
+            "example": "senha123"
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "password"
+        ]
+      },
+      "loginSchema": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email do usuário",
+            "example": "joao.silva@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "Senha do usuário",
+            "example": "senha123"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
       "createTaskSchema": {
         "type": "object",
         "properties": {
@@ -537,6 +853,48 @@
             "type": "string",
             "description": "Status da tarefa",
             "example": "pending"
+          }
+        }
+      },
+      "createUserResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Usuário criado com sucesso."
+          },
+          "data": {
+            "$ref": "#/components/User"
+          }
+        }
+      },
+      "loginResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Autenticação realizada com sucesso."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "token": {
+                "type": "string",
+                "description": "Token JWT gerado após login bem-sucedido",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjNlNDU2Ny1lODliLTEyZDMtYTQ1Ni00MjY2MTQxNzQwMDAiLCJpYXQiOjE2ODg4ODg4MDAsImV4cCI6MTY4ODg5MjQwMH0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+              },
+              "user": {
+                "$ref": "#/components/User"
+              }
+            }
           }
         }
       },
@@ -644,6 +1002,18 @@
           }
         }
       }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
     }
-  }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ]
 }

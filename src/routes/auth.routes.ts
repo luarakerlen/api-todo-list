@@ -1,48 +1,51 @@
+
 import express from 'express';
 import { body } from 'express-validator';
 import { dataValidation } from '../middlewares';
-import { userController } from '../container';
+import { authController } from '../container';
 
-export class UsersRoutes {
+export class AuthRoutes {
     public static bind() {
         const router = express.Router();
+
         /**
-         * @route POST /users
-         * @description Endpoint responsável por criar um novo usuário no sistema
+         * @route POST /auth/login
+         * @description Endpoint responsável por autenticar um usuário e gerar um token JWT
          * 
-         * Recebe os dados do usuário (name, email e password),
-         * envia para o UserController que processa a criação e persiste no banco de dados.
+         * Recebe as credenciais do usuário (email e password),
+         * envia para o AuthController que processa a autenticação, verifica as credenciais
+         * e retorna um token JWT se as credenciais forem válidas.
          * 
-         * @body {string} name - Nome do usuário
          * @body {string} email - Email do usuário
          * @body {string} password - Senha do usuário
          * 
-         * @returns {201} { object } - Usuário criado com sucesso
+         * @returns {200} { token: string } - Token JWT gerado com sucesso
+         * @returns {401} { error: string } - Credenciais inválidas
          * @returns {500} { error: string } - Erro interno do servidor
          */
-        router.post("/users",
-            /*  #swagger.tags = ['Users']
-                #swagger.description = 'Endpoint responsável por criar um novo usuário no sistema. Recebe os dados do usuário (name, email e password), envia para o UserController que processa a criação e persiste no banco de dados.'
+        router.post("/auth/login",
+            /*  #swagger.tags = ['Auth']
+                #swagger.description = 'Endpoint responsável por autenticar um usuário e gerar um token JWT. Recebe as credenciais do usuário (email e password), envia para o AuthController que processa a autenticação, verifica as credenciais e retorna um token JWT se as credenciais forem válidas.'
 
                 #swagger.security = []
-                
+
                 #swagger.requestBody = {
                     required: true,
                     content: {
                         "application/json": {
                             schema: {
-                                $ref: "#/components/schemas/createUserSchema"
+                                $ref: "#/components/schemas/loginSchema"
                             }
                         }
                     }
                 }
 
-                #swagger.responses[201] = {
-                    description: 'Usuário criado com sucesso.',
+                #swagger.responses[200] = {
+                    description: 'Autenticação realizada com sucesso.',
                     content: {
                         "application/json": {
                             schema: {
-                                $ref: '#/components/schemas/createUserResponse'
+                                $ref: '#/components/schemas/loginResponse'
                             }
                         }
                     }
@@ -59,12 +62,12 @@ export class UsersRoutes {
                     }
                 }
 
-                #swagger.responses[409] = {
-                    description: 'Conflito, email já existe.',
+                #swagger.responses[401] = {
+                    description: 'Credenciais inválidas.',
                     content: {
                         "application/json": {
                             schema: {
-                                $ref: '#/components/Error409Response'
+                                $ref: '#/components/Error401CredentialsResponse'
                             }
                         }
                     }
@@ -82,11 +85,10 @@ export class UsersRoutes {
                 }
             */
             dataValidation([
-                body('name').isString().isLength({ min: 1 }),
                 body('email').isEmail(),
                 body('password').isString().isLength({ min: 6 })
             ]),
-            userController.createUser
+            authController.login
         )
 
         return router;

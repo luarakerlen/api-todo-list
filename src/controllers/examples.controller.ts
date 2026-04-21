@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-
 import { ExampleService, ExternalService } from "../services";
 import { onError } from "../utils";
 
