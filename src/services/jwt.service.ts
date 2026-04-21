@@ -1,6 +1,3 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
-
 import { sign } from 'jsonwebtoken';
 import { getJwtOptions } from '../config';
 

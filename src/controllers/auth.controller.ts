@@ -1,7 +1,7 @@
 import { Response } from "express";
 import { AuthService } from "../services";
 import { LoginRequest } from './../dtos/auth.dto';
-import { HTTPResponse } from "../utils";
+import { HTTPResponse, onError } from "../utils";
 
 export class AuthController {
     constructor(private authService: AuthService) { }
@@ -24,7 +24,7 @@ export class AuthController {
             });
 
         } catch (error) {
-
+            return onError(error, res)
         }
     }
 }

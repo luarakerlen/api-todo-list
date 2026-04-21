@@ -13,6 +13,7 @@ export class AuthService {
   ) { }
 
   public async authenticateUser(data: LoginDto) {
+
     const currentUser = await this.userRepository.findUserByEmail(data);
 
     if (!currentUser) {

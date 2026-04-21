@@ -8,7 +8,7 @@ import { CreateUserDto, LoginDto } from "../dtos";
  * evitando que a camada de Service dependa diretamente do ORM.
  */
 export class UserRepository {
-    constructor(private prisma: PrismaClient) { }
+    private prisma = new PrismaClient();
     /**
      * Cria um novo usuário no banco de dados.
      * 

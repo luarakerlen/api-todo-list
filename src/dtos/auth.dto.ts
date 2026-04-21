@@ -1,3 +1,4 @@
+import { Request } from "express";
 
 /**
  * Representa um usuário autenticado no sistema.
@@ -7,3 +8,5 @@ export interface LoginDto {
   email: string;
   password: string;
 }
+
+export type LoginRequest = Request<{}, {}, LoginDto>;
