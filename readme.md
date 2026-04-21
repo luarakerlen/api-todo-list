@@ -1,153 +1,412 @@
-# API Node.js Template
+# API de Todo List
 
-Este é um template para criar APIs RESTful em Node.js utilizando Express, TypeScript, Prisma ORM e PostgreSQL. O projeto está configurado para rodar em containers Docker com autoreload para desenvolvimento.
+API RESTful para gerenciamento de tarefas (todo list) desenvolvida em Node.js com Express, TypeScript, Prisma ORM e PostgreSQL.
 
-## Descrição
+## Objetivo do Projeto
 
-O template inclui uma estrutura básica para uma API Node.js com:
+Esta API permite que usuários cadastrados gerenciem suas tarefas pessoais, incluindo:
 
-- **Express**: Framework web para Node.js.
-- **TypeScript**: Superset do JavaScript com tipagem estática.
-- **Prisma**: ORM para interação com o banco de dados PostgreSQL.
-- **Docker**: Containerização para facilitar o desenvolvimento e deploy.
-- **Autoload**: Recarregamento automático do servidor durante o desenvolvimento.
+- **Criar** tarefas com título, descrição e status
+- **Listar** tarefas com filtros e paginação
+- **Buscar** tarefas específicas
+- **Atualizar** tarefas existentes
+- **Remover** tarefas
 
-## Pré-requisitos
+Cada usuário acessa apenas suas próprias tarefas, garantindo isolamento e segurança dos dados.
 
-Antes de começar, certifique-se de ter instalado:
+---
 
-- [Node.js](https://nodejs.org/) (versão 18 ou superior)
-- [Docker](https://www.docker.com/) e [Docker Compose](https://docs.docker.com/compose/)
-- [Git](https://git-scm.com/)
+## Tecnologias Utilizadas
 
-## ⚙️ Como Usar Este Template
+| Tecnologia               | Descrição                      |
+| ------------------------ | ------------------------------ |
+| **Node.js**              | Runtime JavaScript             |
+| **Express**              | Framework web                  |
+| **TypeScript**           | Linguagem com tipagem estática |
+| **Prisma**               | ORM para banco de dados        |
+| **PostgreSQL**           | Banco de dados relacional      |
+| **JSON Web Token (JWT)** | Autenticação stateless         |
+| **bcrypt**               | Criptografia de senhas         |
+| **Docker**               | Containerização                |
+| **Swagger**              | Documentação da API            |
 
-Este repositório é um template no GitHub. Para usá-lo:
+---
 
-1. Clique no botão **"Use this template"** no topo da página do repositório no GitHub.
-2. Escolha um nome para o seu novo repositório e clique em **"Create repository from template"**.
-3. Clone o repositório criado para sua máquina local:
+## Variáveis de Ambiente
 
-   ```bash
-   git clone https://github.com/SEU_USUARIO/SEU_REPOSITORIO.git
-   cd SEU_REPOSITORIO
-   ```
+Crie um arquivo `.env` na raiz do projeto com base no `.env-example`:
 
-4. Configure as variáveis de ambiente (veja a seção de configuração abaixo).
+```env
+# Porta do servidor
+PORT=3030
 
-## Configuração
+# URL de conexão com o banco de dados
+# Para Docker: postgresql://postgres:postgres@db:5432/meubanco?schema=public
+# Para local/cloud: postgresql://usuario:senha@host:5432/banco
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/meubanco?schema=public"
 
-1. Crie um arquivo `.env` na raiz do projeto com base no arquivo `.env-example`:
+# Chave secreta para assinar tokens JWT (use uma string longa e aleatória)
+JWT_SECRET="sua_chave_secreta_muito_segura_aqui"
 
-   ```env
-   PORT=3030
-   POSTGRES_USER=seu_usuario
-   POSTGRES_PASSWORD=sua_senha
-   POSTGRES_DB=seu_banco
-   DATABASE_URL="postgresql://seu_usuario:sua_senha@localhost:5432/seu_banco?schema=public"
-   ```
+# Tempo de expiração do token JWT (ex: 1h, 24h, 7d)
+JWT_EXPIRES_IN="1h"
+```
 
-2. Ajuste as configurações no `prisma/schema.prisma` conforme necessário para o seu banco de dados.
+| Variável         | Obrigatório | Descrição                        |
+| ---------------- | ----------- | -------------------------------- |
+| `PORT`           | Não         | Porta do servidor (padrão: 3030) |
+| `DATABASE_URL`   | Sim         | URL de conexão com PostgreSQL    |
+| `JWT_SECRET`     | Sim         | Chave para assinar tokens JWT    |
+| `JWT_EXPIRES_IN` | Sim         | Tempo de expiração do token      |
+
+---
 
 ## Instalação e Execução
 
+### Pré-requisitos
+
+- [Node.js](https://nodejs.org/) (versão 18+)
+- [Docker](https://www.docker.com/) e Docker Compose
+- [Git](https://git-scm.com/)
+
+```bash
+# Clonar o repositório
+git clone https://github.com/luarakerlen/api-todo-list.git
+cd api-todo-list
+
+# Criar arquivo .env
+cp .env-example .env
+# Editar .env com suas configurações
+```
+
 ### Com Docker (Recomendado)
 
-1. Certifique-se de que o Docker e Docker Compose estão instalados e rodando.
+```bash
+# Construir e iniciar containers
+docker compose up --build
 
-2. Execute o comando para construir e iniciar os containers:
+# Execute as migrações do Prisma
+docker compose exec app npx prisma migrate deploy
 
-   ```bash
-   docker compose up --build
-   ```
-
-3. A API estará disponível em `http://localhost:3030`.
-
-4. O Prisma Studio (interface gráfica para o banco) estará disponível em `http://localhost:5555`.
-
-5. Para parar os containers:
-   ```bash
-   docker compose down
-   ```
-
-**Nota**: Com Docker, o autoreload está ativado. Qualquer mudança nos arquivos será automaticamente refletida no container.
+# A API estará disponível em http://localhost:3030
+# Documentação Swagger em http://localhost:3030/docs
+```
 
 ### Sem Docker (Desenvolvimento Local)
 
-1. Instale as dependências:
+```bash
+# Instalar dependências
+npm install
 
-   ```bash
-   npm install
-   ```
+# Configurar PostgreSQL localmente ou usar serviço cloud
 
-2. Configure o banco de dados PostgreSQL localmente ou use um serviço como ElephantSQL.
+# Executar migrações
+npx prisma migrate dev
 
-3. Execute as migrações do Prisma:
+# Gerar cliente Prisma
+npx prisma generate
 
-   ```bash
-   npx prisma migrate dev
-   ```
+# Iniciar servidor
+npm run dev
+# A API estará disponível em http://localhost:3030
+# Documentação Swagger em http://localhost:3030/docs
+```
 
-4. Gere o cliente Prisma:
+### Scripts Disponíveis
 
-   ```bash
-   npx prisma generate
-   ```
+| Script            | Descrição                                     |
+| ----------------- | --------------------------------------------- |
+| `npm run dev`     | Inicia em modo desenvolvimento com autoreload |
+| `npm run build`   | Compila TypeScript para JavaScript            |
+| `npm run start`   | Inicia servidor em produção                   |
+| `npm run swagger` | Gera documentação Swagger                     |
 
-5. Inicie o servidor em modo de desenvolvimento:
+---
 
-   ```bash
-   npm run dev
-   ```
+## Rotas da Aplicação
 
-6. A API estará disponível em `http://localhost:3030`.
+### Rotas Públicas
+
+| Método | Rota          | Descrição                           |
+| ------ | ------------- | ----------------------------------- |
+| GET    | `/health`     | Verificar se a API está funcionando |
+| POST   | `/users`      | Criar novo usuário                  |
+| POST   | `/auth/login` | Autenticar usuário e obter token    |
+
+### Rotas Protegidas (requerem token JWT)
+
+| Método | Rota         | Descrição                 |
+| ------ | ------------ | ------------------------- |
+| GET    | `/tasks`     | Listar tarefas do usuário |
+| POST   | `/tasks`     | Criar nova tarefa         |
+| GET    | `/tasks/:id` | Buscar tarefa por ID      |
+| PUT    | `/tasks/:id` | Atualizar tarefa          |
+| DELETE | `/tasks/:id` | Remover tarefa            |
+
+#### End Points Disponíveis
+
+![End Points da Api](./src/docs/api-end-points.png)
+
+#### Diagrama UML
+
+![Diagrama UML](./src/docs/uml.png)
+
+#### Diagrama de Caso de Uso
+
+![Caso de Uso](./src/docs/user-case.png)
+
+---
+
+## Exemplos de Requisição e Resposta
+
+### Criar Usuário
+
+**Requisição:**
+
+```bash
+POST /users
+Content-Type: application/json
+
+{
+  "name": "João Silva",
+  "email": "joao@example.com",
+  "password": "senha123"
+}
+```
+
+**Resposta (201):**
+
+```json
+{
+	"success": true,
+	"message": "Usuário criado com sucesso.",
+	"data": {
+		"id": "123e4567-e89b-12d3-a456-426614174000",
+		"name": "João Silva",
+		"email": "joao@example.com",
+		"createdAt": "2024-06-01T12:00:00Z"
+	}
+}
+```
+
+### Login
+
+**Requisição:**
+
+```bash
+POST /auth/login
+Content-Type: application/json
+
+{
+  "email": "joao@example.com",
+  "password": "senha123"
+}
+```
+
+**Resposta (200):**
+
+```json
+{
+	"success": true,
+	"message": "Autenticação realizada com sucesso.",
+	"data": {
+		"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+		"user": { "id": "...", "name": "João Silva", "email": "joao@example.com" }
+	}
+}
+```
+
+### Criar Tarefa (protegida)
+
+**Requisição:**
+
+```bash
+POST /tasks
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+
+{
+  "title": "Comprar leite",
+  "description": "Ir ao supermercado",
+  "status": "pending"
+}
+```
+
+**Resposta (201):**
+
+```json
+{
+	"success": true,
+	"message": "Tarefa criada com sucesso.",
+	"data": {
+		"id": "123e4567-e89b-12d3-a456-426614174000",
+		"title": "Comprar leite",
+		"description": "Ir ao supermercado",
+		"status": "pending",
+		"createdAt": "2024-06-01T12:00:00Z"
+	}
+}
+```
+
+### Listar Tarefas com Filtros (protegida)
+
+**Requisição:**
+
+```bash
+GET /tasks?status=pending&page=1&pageSize=10
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+**Resposta (200):**
+
+```json
+{
+	"success": true,
+	"message": "Tarefas listadas com sucesso.",
+	"data": {
+		"items": [{ "id": "...", "title": "Comprar leite", "status": "pending" }],
+		"pagination": {
+			"page": 1,
+			"pageSize": 10,
+			"total": 5,
+			"totalPages": 1
+		}
+	}
+}
+```
+
+---
+
+## Regras de Autenticação
+
+A API utiliza **JWT (JSON Web Token)** para autenticação stateless.
+
+### Como Funciona
+
+1. **Login**: O usuário envia email e senha
+2. **Token**: Se as credenciais forem válidas, um token JWT é retornado
+3. **Requisições**: O token deve ser enviado no header das requisições protegidas
+
+### Formato do Token
+
+O token JWT possui três partes separadas por ponto:
+
+```
+xxxxx.yyyyy.zzzzz
+Header . Payload . Assinatura
+```
+
+**Estrutura do Payload:**
+
+```json
+{
+	"userId": "uuid-do-usuario",
+	"iat": 1234567890, // Issued At (timestamp de emissão)
+	"exp": 1234571490 // Expiration (timestamp de expiração)
+}
+```
+
+### Como Enviar o Token
+
+Inclua o token no header `Authorization` com o prefixo `Bearer`:
+
+```bash
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+### Tempo de Expiração
+
+O token expira conforme configurado em `JWT_EXPIRES_IN` (padrão: `1h`).
+
+Após expirar, o usuário deve fazer login novamente.
+
+### Validação do Token
+
+| Situação       | Resposta                           |
+| -------------- | ---------------------------------- |
+| Token ausente  | 401 - "Token não fornecido"        |
+| Token inválido | 401 - "Token inválido ou expirado" |
+| Token expirado | 401 - "Token inválido ou expirado" |
+| Token válido   | Requisição processada normalmente  |
+
+### Rotas Protegidas
+
+Todas as rotas de tarefas (`/tasks`, `/tasks/:id`) requerem autenticação.
+
+Rotas públicas: `/health`, `/users`, `/auth/login`
+
+### Boas Práticas
+
+- **Nunca** exponha o `JWT_SECRET` em código cliente
+- **Guarde** tokens em local seguro (não usar localStorage para produção)
+- **Use HTTPS** em produção para proteger o token
+- **Configure** tempo de expiração adequado (`1h` recomendado)
+
+---
 
 ## Estrutura do Projeto
 
 ```
 ├── src/
-│   ├── container/       # Fluxo de instanciação dos controladores
 │   ├── controllers/     # Controladores da API
-│   ├── database/        # Configurações do banco de dados, contendo os repositories
-│   ├── docs/            # Utilitários (imagens)
+│   ├── database/        # Repositories do banco de dados
+│   ├── docs/            # Imagens e utilitários
 │   ├── dtos/            # Data Transfer Objects
 │   ├── envs/            # Configurações de ambiente
-│   ├── middlewares/     # Middlewares personalizados
+│   ├── middlewares/      # Middlewares (autenticação, validação)
 │   ├── models/          # Modelos de dados
 │   ├── routes/          # Definições de rotas
 │   ├── services/        # Lógica de negócio
-│   ├── shared/          # Arquivos compartilhados dentre todos os arquivos do sistema
+│   ├── shared/          # Arquivos compartilhados
 │   ├── utils/           # Utilitários
 │   ├── app.ts           # Configuração do Express
-│   └── server.ts        # Ponto de entrada da aplicação
+│   └── server.ts       # Ponto de entrada
 ├── prisma/
-│   ├── schema.prisma    # Esquema do banco de dados
-│   └── migrations/      # Migrações do Prisma
-├── Dockerfile           # Configuração do container da aplicação
-├── docker-compose.yml   # Configuração dos serviços Docker
+│   ├── schema.prisma    # Esquema do banco
+│   └── migrations/     # Migrações Prisma
+├── .env                # Variáveis de ambiente
+├── .env-example        # Template de variáveis
+├── docker-compose.yml  # Serviços Docker
 ├── package.json         # Dependências e scripts
-├── tsconfig.json        # Configuração do TypeScript
-└── readme.md            # Este arquivo
+└── readme.md           # Este arquivo
 ```
 
-## Scripts Disponíveis
+---
 
-- `npm run dev`: Inicia o servidor em modo de desenvolvimento com autoreload.
-- `npm run build`: Compila o TypeScript para JavaScript.
-- `npm run start`: Inicia o servidor em produção (após build).
+## Documentação da API (Swagger)
 
-## Tecnologias Utilizadas
+Após iniciar a API, acesse a documentação interativa:
 
-- **Node.js**: Runtime JavaScript.
-- **Express**: Framework web.
-- **TypeScript**: Linguagem de programação.
-- **Prisma**: ORM para banco de dados.
-- **PostgreSQL**: Banco de dados relacional.
-- **Docker**: Containerização.
-- **ts-node-dev**: Ferramenta para desenvolvimento com TypeScript e autoreload.
-- **Swagger**: Ferramenta para documentação da API.
+```
+http://localhost:3030/docs
+```
 
-## 🎯 Decisões de projeto adotadas
+---
+
+## Funcionalidades Implementadas
+
+### Obrigatórias
+
+- [x] Cadastro de usuários
+- [x] Autenticação de usuários (JWT)
+- [x] Segurança no salvamento da senha (bcrypt)
+- [x] CRUD completo de tarefas
+- [x] Proteção de rotas
+- [x] Isolamento de dados por usuário
+
+### Extras
+
+- [x] Paginação de tarefas
+- [x] Filtragem de tarefas por status
+- [x] Busca de tarefas por título
+- [x] Docker para desenvolvimento
+- [ ] Testes automatizados
+- [ ] Refresh token
+- [ ] Deploy da API
+- [ ] Logs estruturados
+- [ ] Rate limiting
+
+### Decisões de projeto adotadas
 
 - Documentação de rotas, controllers e services com TSDocs.
 - Documentação da API com Swagger.
@@ -156,91 +415,43 @@ Este repositório é um template no GitHub. Para usá-lo:
 - Utilização do Repository Pattern.
 - Padronização de respostas HTTP através do HTTPResponse
 
-## 📊 Funcionalidades
-
-- [x] Cadastro de usuários
-- [x] Autenticação de usuários (JWT)
-- [x] Segurança no salvamento da senha
-- [x] Rotas de tarefas protegidas
-- [x] Criação de tarefas
-- [x] Listagem de tarefas do usuário autenticado
-- [x] Busca de tarefa por ID
-- [x] Atualização de tarefas
-- [x] Remoção de tarefas
-
-## Funcionalidades extras implementadas
-
-- [x] Listagem de tarefas com paginação
-- [x] Filtragem de tarefas por status
-- [x] Busca de tarefas por título
-- [x] Docker
-- [ ] Testes automatizados
-- [ ] Refresh token
-- [ ] Deploy da API
-- [ ] Logs estruturados
-- [ ] Rate limiting
-
-## 📌 End Points Disponíveis
-
-![End Points da Api](./src/docs/api-end-points.png)
-
-## Diagrama UML
-
-![Diagrama UML](./src/docs/uml.png)
-
-### Diagrama de Caso de Uso
-
-![Caso de Uso](./src/docs/user-case.png)
+---
 
 ## Requisitos
 
 ### Funcionais
 
-| ID   | Requisito                                                     |
-| ---- | ------------------------------------------------------------- |
-| RF01 | Cadastro de usuários                                          |
-| RF02 | Login de usuários                                             |
-| RF03 | Criar tarefa                                                  |
-| RF04 | Listar tarefas do usuário autenticado                         |
-| RF05 | Buscar uma tarefa específica                                  |
-| RF06 | Atualizar tarefa                                              |
-| RF07 | Remover tarefa                                                |
-| RF08 | Garantir que cada usuário acesse apenas suas próprias tarefas |
-| RF09 | Associar cada tarefa a um usuário                             |
-| RF10 | Definir status da tarefa (pendente, em_andamento, concluida)  |
+| ID   | Requisito                                            |
+| ---- | ---------------------------------------------------- |
+| RF01 | Cadastro de usuários                                 |
+| RF02 | Login de usuários                                    |
+| RF03 | Criar tarefa                                         |
+| RF04 | Listar tarefas                                       |
+| RF05 | Buscar tarefa por ID                                 |
+| RF06 | Atualizar tarefa                                     |
+| RF07 | Remover tarefa                                       |
+| RF08 | Isolar tarefas por usuário                           |
+| RF09 | Status da tarefa (pendente, em progresso, concluída) |
 
 ### Não Funcionais
 
-| ID    | Requisito                                                  |
-| ----- | ---------------------------------------------------------- |
-| RNF01 | Uso de autenticação com JWT                                |
-| RNF02 | Proteção das rotas de tarefas                              |
-| RNF03 | Armazenamento seguro de senhas (hash/criptografia)         |
-| RNF04 | Proibição de armazenamento de senha em texto puro          |
-| RNF05 | Email do usuário deve ser único                            |
-| RNF06 | Validação de campos obrigatórios                           |
-| RNF07 | Organização do projeto em camadas                          |
-| RNF08 | Implementação de pelo menos um Design Pattern              |
-| RNF09 | Separação de responsabilidades                             |
-| RNF10 | Tratamento de erros                                        |
-| RNF11 | Padronização de respostas da API                           |
-| RNF12 | Uso correto de códigos HTTP                                |
-| RNF13 | Validação de dados de entrada                              |
-| RNF14 | Documentação clara da API                                  |
-| RNF15 | Inclusão de instruções de execução e variáveis de ambiente |
+| ID    | Requisito                   |
+| ----- | --------------------------- |
+| RNF01 | Autenticação JWT            |
+| RNF02 | Rotas protegidas            |
+| RNF03 | Senhas criptografadas       |
+| RNF04 | Email único                 |
+| RNF05 | Validação de campos         |
+| RNF06 | Tratamento de erros         |
+| RNF07 | Documentação Swagger        |
+| RNF08 | Uso correto de códigos HTTP |
 
-## 📄 Documentação da API (Swagger)
-
-Após rodar os comandos de inicialização da API, acesse a documentação interativa da API:
-
-```
-http://localhost:3030/docs
-```
+---
 
 ## Contribuição
 
-Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull requests.
+Contribuições são bem-vindas! Abra issues e pull requests.
 
 ## Licença
 
-Este projeto está sob a licença ISC.
+ISC
