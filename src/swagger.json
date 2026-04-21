@@ -75,6 +75,16 @@
               }
             }
           },
+          "401": {
+            "description": "Token inválido ou expirado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/Error401TokenInvalidoResponse"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Erro interno do servidor.",
             "content": {
@@ -109,6 +119,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/Error400Response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou expirado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/Error401TokenInvalidoResponse"
                 }
               }
             }
@@ -231,6 +251,16 @@
               }
             }
           },
+          "401": {
+            "description": "Token inválido ou expirado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/Error401TokenInvalidoResponse"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Tarefa não encontrada para o ID fornecido ou não pertence ao usuário autenticado.",
             "content": {
@@ -290,6 +320,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/Error400Response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou expirado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/Error401TokenInvalidoResponse"
                 }
               }
             }

@@ -46,6 +46,28 @@ export class TaskRoutes {
                               $ref: '#/components/schemas/listTasksResponse' 
                           }
                       }
+
+                      #swagger.responses[401] = {
+                          description: 'Token não fornecido.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error401TokenAusenteResponse'
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[401] = {
+                          description: 'Token inválido ou expirado.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error401TokenInvalidoResponse'
+                                  }
+                              }
+                          }
+                      }
       
                       #swagger.responses[400] = {
                           description: 'Requisição inválida, com detalhes dos erros de validação.',
@@ -103,6 +125,28 @@ export class TaskRoutes {
                               "application/json": {
                                   schema: {
                                       $ref: '#/components/schemas/createTaskResponse'
+                                  }
+                              }
+                          }
+                      }
+
+                      #swagger.responses[401] = {
+                          description: 'Token não fornecido.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error401TokenAusenteResponse'
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[401] = {
+                          description: 'Token inválido ou expirado.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error401TokenInvalidoResponse'
                                   }
                               }
                           }
@@ -268,6 +312,28 @@ export class TaskRoutes {
                               }
                           }
                       }
+
+                      #swagger.responses[401] = {
+                          description: 'Token não fornecido.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error401TokenAusenteResponse'
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[401] = {
+                          description: 'Token inválido ou expirado.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error401TokenInvalidoResponse'
+                                  }
+                              }
+                          }
+                      }
       
                       #swagger.responses[400] = {
                           description: 'Requisição inválida, com detalhes dos erros de validação.',
@@ -332,6 +398,28 @@ export class TaskRoutes {
                               "application/json": {
                                   schema: {
                                       $ref: '#/components/Error404Response'
+                                  }
+                              }
+                          }
+                      }
+
+                      #swagger.responses[401] = {
+                          description: 'Token não fornecido.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error401TokenAusenteResponse'
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[401] = {
+                          description: 'Token inválido ou expirado.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error401TokenInvalidoResponse'
                                   }
                               }
                           }
