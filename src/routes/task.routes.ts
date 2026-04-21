@@ -15,333 +15,443 @@ import { taskController } from '../container';
  * As rotas são organizadas em uma classe para melhor modularidade e manutenção.
  */
 export class TaskRoutes {
-  public static bind() {
-    const router = express.Router();
+    public static bind() {
+        const router = express.Router();
 
-    // Protected routes with authentication
-    router.get(
-      '/tasks',
-      /*  #swagger.tags = ['Tasks']
-                #swagger.description = 'Lista tarefas do usuário autenticado, com suporte a filtros e paginação.'
-                
-                #swagger.parameters['title'] = {
-                    $ref: '#/components/parameters/taskTitle'
-                }
+        // Protected routes with authentication
+        router.get(
+            '/tasks',
+            /*  #swagger.tags = ['Tasks']
+                      #swagger.description = 'Lista tarefas do usuário autenticado, com suporte a filtros e paginação.'
+                      
+                      #swagger.parameters['title'] = {
+                          $ref: '#/components/parameters/taskTitle'
+                      }
+      
+                      #swagger.parameters['status'] = {
+                          $ref: '#/components/parameters/taskStatus'
+                      }
+      
+                      #swagger.parameters['page'] = {
+                          $ref: '#/components/parameters/page'
+                      }
+      
+                      #swagger.parameters['pageSize'] = {
+                          $ref: '#/components/parameters/pageSize'
+                      }
+      
+                      #swagger.responses[200] = {
+                          description: 'Lista das tarefas do usuário autenticado e dados de paginação.',
+                          schema: {
+                              $ref: '#/components/schemas/listTasksResponse' 
+                          }
+                      }
 
-                #swagger.parameters['status'] = {
-                    $ref: '#/components/parameters/taskStatus'
-                }
+                      #swagger.responses[401] = {
+                          description: 'Token não fornecido.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error401TokenAusenteResponse'
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[401] = {
+                          description: 'Token inválido ou expirado.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error401TokenInvalidoResponse'
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[400] = {
+                          description: 'Requisição inválida, com detalhes dos erros de validação.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error400Response'
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[500] = {
+                          description: 'Erro interno do servidor.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error500Response'
+                                  }
+                              }
+                          }
+                      }
+                  */
+            authMiddleware,
+            dataValidation([
+                query('page').optional().isInt({ min: 1 }),
+                query('pageSize').optional().isInt({ min: 1 }),
+                query('status')
+                    .optional()
+                    .isIn(['pending', 'in_progress', 'completed']),
+                query('title').optional().isString(),
+            ]),
+            taskController.listTasks,
+        );
 
-                #swagger.parameters['page'] = {
-                    $ref: '#/components/parameters/page'
-                }
+        router.post(
+            '/tasks',
+            /*  #swagger.tags = ['Tasks']
+                      #swagger.description = 'Cria uma nova tarefa para o usuário autenticado.'
+      
+                      #swagger.requestBody = {
+                          required: true,
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: "#/components/schemas/createTaskSchema"
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[201] = {
+                          description: 'Tarefa criada com sucesso.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/schemas/createTaskResponse'
+                                  }
+                              }
+                          }
+                      }
 
-                #swagger.parameters['pageSize'] = {
-                    $ref: '#/components/parameters/pageSize'
-                }
+                      #swagger.responses[401] = {
+                          description: 'Token não fornecido.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error401TokenAusenteResponse'
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[401] = {
+                          description: 'Token inválido ou expirado.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error401TokenInvalidoResponse'
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[400] = {
+                          description: 'Requisição inválida, com detalhes dos erros de validação.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error400Response'
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[500] = {
+                          description: 'Erro interno do servidor.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error500Response'
+                                  }
+                              }
+                          }
+                      }
+                  */
+            authMiddleware,
+            dataValidation([
+                body('title').isString().isLength({ min: 1 }),
 
-                #swagger.responses[200] = {
-                    description: 'Lista das tarefas do usuário autenticado e dados de paginação.',
-                    schema: {
-                        $ref: '#/components/schemas/listTasksResponse' 
-                    }
-                }
+                // optional fields
+                body('description').optional().isString(),
+                body('status')
+                    .optional()
+                    .isIn(['pending', 'in_progress', 'completed'])
+                    .withMessage(
+                        "Status deve ser 'pending', 'in_progress' ou 'completed'",
+                    ),
+            ]),
+            taskController.createTask,
+        );
 
-                #swagger.responses[400] = {
-                    description: 'Requisição inválida, com detalhes dos erros de validação.',
-                    content: {
-                        "application/json": {
-                            schema: {
-                                $ref: '#/components/Error400Response'
-                            }
-                        }
-                    }
-                }
+        router.get(
+            '/tasks/:id',
+            /*  #swagger.tags = ['Tasks']
+                      #swagger.description = 'Recupera uma tarefa específica pelo seu ID.'
+      
+                      #swagger.parameters['id'] = {
+                          $ref: '#/components/parameters/taskId'
+                      }
+      
+                      #swagger.responses[200] = {
+                          description: 'Detalhes da tarefa encontrada.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/schemas/getTaskResponse'
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[404] = {
+                          description: 'Tarefa não encontrada para o ID fornecido ou não pertence ao usuário autenticado.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error404Response'
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[401] = {
+                          description: 'Token não fornecido.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error401TokenAusenteResponse'
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[401] = {
+                          description: 'Token inválido ou expirado.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error401TokenInvalidoResponse'
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[400] = {
+                          description: 'Requisição inválida, com detalhes dos erros de validação.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error400Response'
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[500] = {
+                          description: 'Erro interno do servidor.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error500Response'
+                                  }
+                              }
+                          }
+                      }
+                  */
+            authMiddleware,
+            dataValidation([param('id').isUUID()]),
+            taskController.getTaskById,
+        );
 
-                #swagger.responses[500] = {
-                    description: 'Erro interno do servidor.',
-                    content: {
-                        "application/json": {
-                            schema: {
-                                $ref: '#/components/Error500Response'
-                            }
-                        }
-                    }
-                }
-            */
-      authMiddleware,
-      dataValidation([
-        query('page').optional().isInt({ min: 1 }),
-        query('pageSize').optional().isInt({ min: 1 }),
-        query('status')
-          .optional()
-          .isIn(['pending', 'in_progress', 'completed']),
-        query('title').optional().isString(),
-      ]),
-      taskController.listTasks,
-    );
+        router.put(
+            '/tasks/:id',
+            /*  #swagger.tags = ['Tasks']
+                      #swagger.description = 'Atualiza uma tarefa existente pelo seu ID.'
+      
+                      
+                      #swagger.parameters['id'] = {
+                          $ref: '#/components/parameters/taskId'
+                      }
+      
+                      #swagger.requestBody = {
+                          required: true,
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: "#/components/schemas/updateTaskSchema"
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[200] = {
+                          description: 'Tarefa atualizada com sucesso.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/schemas/updateTaskResponse'
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[404] = {
+                          description: 'Tarefa não encontrada para o ID fornecido ou não pertence ao usuário autenticado.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error404Response'
+                                  }
+                              }
+                          }
+                      }
 
-    router.post(
-      '/tasks',
-      /*  #swagger.tags = ['Tasks']
-                #swagger.description = 'Cria uma nova tarefa para o usuário autenticado.'
+                      #swagger.responses[401] = {
+                          description: 'Token não fornecido.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error401TokenAusenteResponse'
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[401] = {
+                          description: 'Token inválido ou expirado.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error401TokenInvalidoResponse'
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[400] = {
+                          description: 'Requisição inválida, com detalhes dos erros de validação.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error400Response'
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[500] = {
+                          description: 'Erro interno do servidor.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error500Response'
+                                  }
+                              }
+                          }
+                      }
+                  */
+            authMiddleware,
+            dataValidation([
+                param('id').isUUID(),
+                body('title').optional().isString(),
+                body('description').optional().isString(),
+                body('status')
+                    .optional()
+                    .isIn(['pending', 'in_progress', 'completed'])
+                    .withMessage(
+                        "Status deve ser 'pending', 'in_progress' ou 'completed'",
+                    ),
+            ]),
+            taskController.updateTask,
+        );
 
-                #swagger.requestBody = {
-                    required: true,
-                    content: {
-                        "application/json": {
-                            schema: {
-                                $ref: "#/components/schemas/createTaskSchema"
-                            }
-                        }
-                    }
-                }
+        router.delete(
+            '/tasks/:id',
+            /*  #swagger.tags = ['Tasks']
+                      #swagger.description = 'Exclui uma tarefa pelo seu ID.'
+      
+                      #swagger.parameters['id'] = {
+                          $ref: '#/components/parameters/taskId'
+                      }
+      
+                      #swagger.responses[200] = {
+                          description: 'Tarefa deletada com sucesso.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/schemas/deleteTaskResponse'
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[404] = {
+                          description: 'Tarefa não encontrada para o ID fornecido ou não pertence ao usuário autenticado.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error404Response'
+                                  }
+                              }
+                          }
+                      }
 
-                #swagger.responses[201] = {
-                    description: 'Tarefa criada com sucesso.',
-                    content: {
-                        "application/json": {
-                            schema: {
-                                $ref: '#/components/schemas/createTaskResponse'
-                            }
-                        }
-                    }
-                }
+                      #swagger.responses[401] = {
+                          description: 'Token não fornecido.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error401TokenAusenteResponse'
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[401] = {
+                          description: 'Token inválido ou expirado.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error401TokenInvalidoResponse'
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[400] = {
+                          description: 'Requisição inválida, com detalhes dos erros de validação.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error400Response'
+                                  }
+                              }
+                          }
+                      }
+      
+                      #swagger.responses[500] = {
+                          description: 'Erro interno do servidor.',
+                          content: {
+                              "application/json": {
+                                  schema: {
+                                      $ref: '#/components/Error500Response'
+                                  }
+                              }
+                          }
+                      }
+                  */
+            authMiddleware,
+            dataValidation([param('id').isUUID()]),
+            taskController.deleteTask,
+        );
 
-                #swagger.responses[400] = {
-                    description: 'Requisição inválida, com detalhes dos erros de validação.',
-                    content: {
-                        "application/json": {
-                            schema: {
-                                $ref: '#/components/Error400Response'
-                            }
-                        }
-                    }
-                }
-
-                #swagger.responses[500] = {
-                    description: 'Erro interno do servidor.',
-                    content: {
-                        "application/json": {
-                            schema: {
-                                $ref: '#/components/Error500Response'
-                            }
-                        }
-                    }
-                }
-            */
-      authMiddleware,
-      dataValidation([
-        body('title').isString().isLength({ min: 1 }),
-
-        // optional fields
-        body('description').optional().isString(),
-        body('status')
-          .optional()
-          .isIn(['pending', 'in_progress', 'completed'])
-          .withMessage(
-            "Status deve ser 'pending', 'in_progress' ou 'completed'",
-          ),
-      ]),
-      taskController.createTask,
-    );
-
-    router.get(
-      '/tasks/:id',
-      /*  #swagger.tags = ['Tasks']
-                #swagger.description = 'Recupera uma tarefa específica pelo seu ID.'
-
-                #swagger.parameters['id'] = {
-                    $ref: '#/components/parameters/taskId'
-                }
-
-                #swagger.responses[200] = {
-                    description: 'Detalhes da tarefa encontrada.',
-                    content: {
-                        "application/json": {
-                            schema: {
-                                $ref: '#/components/schemas/getTaskResponse'
-                            }
-                        }
-                    }
-                }
-
-                #swagger.responses[404] = {
-                    description: 'Tarefa não encontrada para o ID fornecido ou não pertence ao usuário autenticado.',
-                    content: {
-                        "application/json": {
-                            schema: {
-                                $ref: '#/components/Error404Response'
-                            }
-                        }
-                    }
-                }
-
-                #swagger.responses[400] = {
-                    description: 'Requisição inválida, com detalhes dos erros de validação.',
-                    content: {
-                        "application/json": {
-                            schema: {
-                                $ref: '#/components/Error400Response'
-                            }
-                        }
-                    }
-                }
-
-                #swagger.responses[500] = {
-                    description: 'Erro interno do servidor.',
-                    content: {
-                        "application/json": {
-                            schema: {
-                                $ref: '#/components/Error500Response'
-                            }
-                        }
-                    }
-                }
-            */
-      authMiddleware,
-      dataValidation([param('id').isUUID()]),
-      taskController.getTaskById,
-    );
-
-    router.put(
-      '/tasks/:id',
-      /*  #swagger.tags = ['Tasks']
-                #swagger.description = 'Atualiza uma tarefa existente pelo seu ID.'
-
-                
-                #swagger.parameters['id'] = {
-                    $ref: '#/components/parameters/taskId'
-                }
-
-                #swagger.requestBody = {
-                    required: true,
-                    content: {
-                        "application/json": {
-                            schema: {
-                                $ref: "#/components/schemas/updateTaskSchema"
-                            }
-                        }
-                    }
-                }
-
-                #swagger.responses[200] = {
-                    description: 'Tarefa atualizada com sucesso.',
-                    content: {
-                        "application/json": {
-                            schema: {
-                                $ref: '#/components/schemas/updateTaskResponse'
-                            }
-                        }
-                    }
-                }
-
-                #swagger.responses[404] = {
-                    description: 'Tarefa não encontrada para o ID fornecido ou não pertence ao usuário autenticado.',
-                    content: {
-                        "application/json": {
-                            schema: {
-                                $ref: '#/components/Error404Response'
-                            }
-                        }
-                    }
-                }
-
-                #swagger.responses[400] = {
-                    description: 'Requisição inválida, com detalhes dos erros de validação.',
-                    content: {
-                        "application/json": {
-                            schema: {
-                                $ref: '#/components/Error400Response'
-                            }
-                        }
-                    }
-                }
-
-                #swagger.responses[500] = {
-                    description: 'Erro interno do servidor.',
-                    content: {
-                        "application/json": {
-                            schema: {
-                                $ref: '#/components/Error500Response'
-                            }
-                        }
-                    }
-                }
-            */
-      authMiddleware,
-      dataValidation([
-        param('id').isUUID(),
-        body('title').optional().isString(),
-        body('description').optional().isString(),
-        body('status')
-          .optional()
-          .isIn(['pending', 'in_progress', 'completed'])
-          .withMessage(
-            "Status deve ser 'pending', 'in_progress' ou 'completed'",
-          ),
-      ]),
-      taskController.updateTask,
-    );
-
-    router.delete(
-      '/tasks/:id',
-      /*  #swagger.tags = ['Tasks']
-                #swagger.description = 'Exclui uma tarefa pelo seu ID.'
-
-                #swagger.parameters['id'] = {
-                    $ref: '#/components/parameters/taskId'
-                }
-
-                #swagger.responses[200] = {
-                    description: 'Tarefa deletada com sucesso.',
-                    content: {
-                        "application/json": {
-                            schema: {
-                                $ref: '#/components/schemas/deleteTaskResponse'
-                            }
-                        }
-                    }
-                }
-
-                #swagger.responses[404] = {
-                    description: 'Tarefa não encontrada para o ID fornecido ou não pertence ao usuário autenticado.',
-                    content: {
-                        "application/json": {
-                            schema: {
-                                $ref: '#/components/Error404Response'
-                            }
-                        }
-                    }
-                }
-
-                #swagger.responses[400] = {
-                    description: 'Requisição inválida, com detalhes dos erros de validação.',
-                    content: {
-                        "application/json": {
-                            schema: {
-                                $ref: '#/components/Error400Response'
-                            }
-                        }
-                    }
-                }
-
-                #swagger.responses[500] = {
-                    description: 'Erro interno do servidor.',
-                    content: {
-                        "application/json": {
-                            schema: {
-                                $ref: '#/components/Error500Response'
-                            }
-                        }
-                    }
-                }
-            */
-      authMiddleware,
-      dataValidation([param('id').isUUID()]),
-      taskController.deleteTask,
-    );
-
-    return router;
-  }
+        return router;
+    }
 }

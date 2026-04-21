@@ -17,7 +17,7 @@ export class JwtService {
     const token = sign(
       data,
       secret,
-      getJwtOptions(), // <-SignOptions
+      getJwtOptions(),
     );
 
     return token;

@@ -6,25 +6,71 @@ const doc = {
     "description": "API para gerenciar uma lista de tarefas (todo list). A API permite que um usuário cadastrado crie e gerencie suas tarefas, incluindo a criação, leitura, atualização e exclusão de tarefas. Cada tarefa possui um título, descrição, status (pendente, em progresso ou concluída) e uma data de criação. A API é protegida por autenticação JWT, garantindo que apenas usuários autorizados possam acessar e modificar suas tarefas."
   },
   host: 'localhost:3030',
+  schemes: ["http"],
+  securityDefinitions: {
+    bearerAuth: {
+      type: "http",
+      scheme: "bearer",
+      bearerFormat: "JWT",
+    },
+  },
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
   tags: [
     {
       name: 'Health',
       description: 'Endpoints relacionados à verificação de saúde da API.',
     },
-    // {
-    //   name: 'Users',
-    //   description: 'Endpoints relacionados ao gerenciamento de usuários, incluindo registro, login e atualização de perfil.',
-    // },
-    // {
-    //   name: 'Auth',
-    //   description: 'Endpoints relacionados à autenticação, como login e logout.',
-    // },
+    {
+      name: 'Users',
+      description: 'Endpoints relacionados ao gerenciamento de usuários, incluindo registro, login e atualização de perfil.',
+    },
+    {
+      name: 'Auth',
+      description: 'Endpoints relacionados à autenticação, como login e logout.',
+    },
     {
       name: 'Tasks',
       description: 'Endpoints para gerenciamento de tarefas, incluindo criação, leitura, atualização e exclusão de tarefas.',
     }
   ],
   components: {
+    User: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'string',
+          description: 'ID do usuário',
+          example: '123e4567-e89b-12d3-a456-426614174000'
+        },
+        name: {
+          type: 'string',
+          description: 'Nome do usuário',
+          example: 'João Silva'
+        },
+        email: {
+          type: 'string',
+          format: 'email',
+          description: 'Email do usuário',
+          example: 'joao.silva@example.com'
+        },
+        createdAt: {
+          type: 'string',
+          format: 'date-time',
+          description: 'Data e hora de criação do usuário',
+          example: '2024-06-01T12:00:00Z'
+        },
+        updatedAt: {
+          type: 'string',
+          format: 'date-time',
+          description: 'Data e hora da última atualização do usuário',
+          example: '2024-06-02T15:30:00Z'
+        },
+      }
+    },
     Task: {
       type: 'object',
       properties: {
@@ -99,11 +145,40 @@ const doc = {
         message: { type: 'string', example: 'Requisição inválida' }
       }
     },
+    Error401CredentialsResponse: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: false },
+        message: { type: 'string', example: 'E-mail ou senha inválidos' }
+      }
+    },
+    Error401TokenInvalidoResponse: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: false },
+        message: { type: 'string', example: 'Token inválido ou expirado' }
+      }
+    },
+    Error401TokenAusenteResponse: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: false },
+        message: { type: 'string', example: 'Token não fornecido' }
+      }
+    },
     Error404Response: {
       type: 'object',
       properties: {
         success: { type: 'boolean', example: false },
         message: { type: 'string', example: 'Recurso não encontrado' }
+      }
+    },
+    Error409Response: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: false },
+        message: { type: 'string', example: 'Falha de validação: valor duplicado' },
+        details: { type: 'string', example: 'email já existe.' }
       }
     },
     Error500Response: {
@@ -114,6 +189,45 @@ const doc = {
       }
     },
     '@schemas': {
+      createUserSchema: {
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string',
+            description: 'Nome do usuário',
+            example: 'João Silva'
+          },
+          email: {
+            type: 'string',
+            format: 'email',
+            description: 'Email do usuário',
+            example: 'joao.silva@example.com'
+          },
+          password: {
+            type: 'string',
+            description: 'Senha do usuário',
+            example: 'senha123'
+          }
+        },
+        required: ['name', 'email', 'password']
+      },
+      loginSchema: {
+        type: 'object',
+        properties: {
+          email: {
+            type: 'string',
+            format: 'email',
+            description: 'Email do usuário',
+            example: 'joao.silva@example.com'
+          },
+          password: {
+            type: 'string',
+            description: 'Senha do usuário',
+            example: 'senha123'
+          }
+        },
+        required: ['email', 'password']
+      },
       createTaskSchema: {
         type: 'object',
         properties: {
@@ -162,6 +276,36 @@ const doc = {
             type: 'string',
             description: 'Status da tarefa',
             example: 'pending'
+          }
+        }
+      },
+      createUserResponse: {
+        type: 'object',
+        properties: {
+          success: { type: 'boolean', example: true },
+          message: { type: 'string', example: 'Usuário criado com sucesso.' },
+          data: {
+            $ref: '#/components/User'
+          }
+        }
+      },
+      loginResponse: {
+        type: 'object',
+        properties: {
+          success: { type: 'boolean', example: true },
+          message: { type: 'string', example: 'Autenticação realizada com sucesso.' },
+          data: {
+            type: 'object',
+            properties: {
+              token: {
+                type: 'string',
+                description: 'Token JWT gerado após login bem-sucedido',
+                example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjNlNDU2Ny1lODliLTEyZDMtYTQ1Ni00MjY2MTQxNzQwMDAiLCJpYXQiOjE2ODg4ODg4MDAsImV4cCI6MTY4ODg5MjQwMH0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+              },
+              user: {
+                $ref: '#/components/User'
+              }
+            }
           }
         }
       },
@@ -293,7 +437,7 @@ const doc = {
 };
 
 const outputFile = './swagger.json';
-const routes = ['./routes/task.routes.ts', './routes/health.routes.ts'];
+const routes = ['./routes/task.routes.ts', './routes/health.routes.ts', './routes/users.routes.ts', './routes/auth.routes.ts'];
 
 /* NOTE: If you are using the express Router, you must pass in the 'routes' only the 
 root file where the route starts, such as index.js, app.js, routes.js, etc ... */

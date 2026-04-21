@@ -6,7 +6,7 @@ import { HTTPResponse, onError } from "../utils";
 export class AuthController {
     constructor(private authService: AuthService) { }
 
-    public async login(req: LoginRequest, res: Response) {
+    public login = async (req: LoginRequest, res: Response) => {
 
         try {
             const { email, password } = req.body;
@@ -18,8 +18,8 @@ export class AuthController {
 
             return HTTPResponse({
                 res,
-                statusCode: 201,
-                message: "Criado!",
+                statusCode: 200,
+                message: "Autenticação realizada com sucesso.",
                 data: result
             });
 
