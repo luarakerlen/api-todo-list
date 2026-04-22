@@ -353,22 +353,23 @@ Rotas públicas: `/health`, `/users`, `/auth/login`
 │   ├── docs/            # Imagens e utilitários
 │   ├── dtos/            # Data Transfer Objects
 │   ├── envs/            # Configurações de ambiente
-│   ├── middlewares/      # Middlewares (autenticação, validação)
+│   ├── middlewares/     # Middlewares (autenticação, validação)
 │   ├── models/          # Modelos de dados
+│   ├── repositories/    # Encapsula o acesso ao DB e (CRUD)
 │   ├── routes/          # Definições de rotas
 │   ├── services/        # Lógica de negócio
 │   ├── shared/          # Arquivos compartilhados
 │   ├── utils/           # Utilitários
 │   ├── app.ts           # Configuração do Express
-│   └── server.ts       # Ponto de entrada
+│   └── server.ts        # Ponto de entrada
 ├── prisma/
 │   ├── schema.prisma    # Esquema do banco
-│   └── migrations/     # Migrações Prisma
-├── .env                # Variáveis de ambiente
-├── .env-example        # Template de variáveis
-├── docker-compose.yml  # Serviços Docker
+│   └── migrations/      # Migrações Prisma
+├── .env                 # Variáveis de ambiente
+├── .env-example         # Template de variáveis
+├── docker-compose.yml   # Serviços Docker
 ├── package.json         # Dependências e scripts
-└── readme.md           # Este arquivo
+└── readme.md            # Este arquivo
 ```
 
 ---
