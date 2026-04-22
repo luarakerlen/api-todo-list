@@ -1,8 +1,8 @@
 import { User as UserEntity } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
-import { UserRepository } from '../database';
 import { CreateUserDto } from '../dtos';
 import { User } from '../models';
+import { UserRepository } from '../repositories';
 
 /**
  * Service responsável pelas regras de negócio relacionadas a Usuário.

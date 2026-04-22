@@ -1,10 +1,10 @@
 import { User as UserEntity } from '@prisma/client';
 import bcrypt from 'bcrypt';
-import { UserRepository } from '../database';
 import { LoginDto } from '../dtos';
 import { User } from '../models';
 import { HTTPError } from '../utils';
 import { JwtService } from './jwt.service';
+import { UserRepository } from '../repositories';
 
 export class AuthService {
   constructor(

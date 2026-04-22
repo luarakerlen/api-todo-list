@@ -417,37 +417,49 @@ http://localhost:3030/docs
 
 ---
 
+
 ## Requisitos
 
-### Funcionais
+<div style="display: flex; gap: 40px;">
 
-| ID   | Requisito                                            |
-| ---- | ---------------------------------------------------- |
-| RF01 | Cadastro de usuários                                 |
-| RF02 | Login de usuários                                    |
-| RF03 | Criar tarefa                                         |
-| RF04 | Listar tarefas                                       |
-| RF05 | Buscar tarefa por ID                                 |
-| RF06 | Atualizar tarefa                                     |
-| RF07 | Remover tarefa                                       |
-| RF08 | Isolar tarefas por usuário                           |
+<div>
+
+### 🔹 Requisitos Funcionais
+
+| ID   | Requisito |
+|------|----------|
+| RF01 | Cadastro de usuários |
+| RF02 | Login de usuários |
+| RF03 | Criar tarefa |
+| RF04 | Listar tarefas |
+| RF05 | Buscar tarefa por ID |
+| RF06 | Atualizar tarefa |
+| RF07 | Remover tarefa |
+| RF08 | Isolar tarefas por usuário |
 | RF09 | Status da tarefa (pendente, em progresso, concluída) |
 
-### Não Funcionais
+</div>
 
-| ID    | Requisito                   |
-| ----- | --------------------------- |
-| RNF01 | Autenticação JWT            |
-| RNF02 | Rotas protegidas            |
-| RNF03 | Senhas criptografadas       |
-| RNF04 | Email único                 |
-| RNF05 | Validação de campos         |
-| RNF06 | Tratamento de erros         |
-| RNF07 | Documentação Swagger        |
+<div>
+
+### 🔸 Requisitos Não Funcionais
+
+| ID   | Requisito |
+|------|----------|
+| RNF01 | Autenticação JWT |
+| RNF02 | Rotas protegidas |
+| RNF03 | Senhas criptografadas |
+| RNF04 | Email único |
+| RNF05 | Validação de campos |
+| RNF06 | Tratamento de erros |
+| RNF07 | Documentação Swagger |
 | RNF08 | Uso correto de códigos HTTP |
 
----
+</div>
 
+</div>
+
+--- 
 ## Contribuição
 
 Contribuições são bem-vindas! Abra issues e pull requests.

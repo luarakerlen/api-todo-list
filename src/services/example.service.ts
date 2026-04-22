@@ -1,11 +1,10 @@
 import { Example as ExampleEntity } from "@prisma/client";
-
+import { JsonObject } from "@prisma/client/runtime/library";
 import { ExternalService } from ".";
-import prismaRepository from "../database/prisma.repository";
+import { prisma } from "../database";
 import { CreateExampleDto, FindExampleDto, UpdateExampleDto } from "../dtos";
 import { Example } from "../models";
 import { HTTPError } from "../utils";
-import { JsonObject } from "@prisma/client/runtime/library";
 
 export class ExampleService {
 
@@ -17,7 +16,7 @@ export class ExampleService {
 
 
   public async createExample(dto: CreateExampleDto): Promise<Example> {
-    const newExample = await prismaRepository.example.create({
+    const newExample = await prisma.example.create({
       data: { ...dto },
     });
 
@@ -25,7 +24,7 @@ export class ExampleService {
   }
 
   public async findExample(dto: FindExampleDto): Promise<Example> {
-    const exampleDB = await prismaRepository.example.findUnique({
+    const exampleDB = await prisma.example.findUnique({
       where: { id: dto.exampleId },
     });
 
@@ -46,7 +45,7 @@ export class ExampleService {
       }
     */
 
-    const exampleUpdated = await prismaRepository.example.update({
+    const exampleUpdated = await prisma.example.update({
       where: { id: dto.exampleId },
       data: { ...dto },
     });
@@ -64,7 +63,7 @@ export class ExampleService {
       }
     */
 
-    const exampleDeleted = await prismaRepository.example.delete({
+    const exampleDeleted = await prisma.example.delete({
       where: { id: dto.exampleId },
     });
 
@@ -72,7 +71,7 @@ export class ExampleService {
   }
 
   public async listExamples(): Promise<Example[]> {
-    const examplesDB = await prismaRepository.example.findMany({
+    const examplesDB = await prisma.example.findMany({
       orderBy: { createdAt: "desc" }
     });
 

@@ -1,4 +1,4 @@
-import { prisma } from "./prisma.repository";
+import { prisma } from "../database";
 
 import { CreateUserDto, LoginDto } from "../dtos";
 

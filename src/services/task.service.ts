@@ -1,10 +1,10 @@
-import prismaRepository from "../database/prisma.repository";
 import { Task as TaskEntity } from "@prisma/client";
+import { prisma } from "../database";
+import { CreateTaskDto, GetTasksWhereDto, ListTasksDto, UpdateTaskDto } from "../dtos";
 import { Task } from "../models";
-import { CreateTaskDto, UpdateTaskDto, ListTasksDto, GetTasksWhereDto } from "../dtos";
+import { TaskRepository } from "../repositories";
 import { PaginatedResponse } from "../shared/types";
 import { HTTPError } from "../utils";
-import { TaskRepository } from "../database";
 
 export class TaskService {
   constructor(private taskRepository: TaskRepository) { }
@@ -64,7 +64,7 @@ export class TaskService {
     const page = pagination?.page ?? 1;
     const pageSize = pagination?.pageSize ?? 10;
 
-    const totalTasks = await prismaRepository.task.count({ where });
+    const totalTasks = await prisma.task.count({ where });
 
     /* Fetching data */
     const tasks = await this.taskRepository.listTasks({

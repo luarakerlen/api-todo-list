@@ -1,5 +1,5 @@
 import { CreateTaskDto, GetTasksDto, UpdateTaskDto } from "../dtos";
-import { prisma } from "./prisma.repository";
+import { prisma } from "../database";
 
 /**
  * Repository responsável por todas as operações de banco relacionadas às Tarefas.
